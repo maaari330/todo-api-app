@@ -47,23 +47,49 @@ jobs:
       # JSON 仕様チェック
       - name: Check JSON Spec
         run: |
+          set +e
+          # curl の接続試行。失敗しても一旦止めない
           STATUS=$(curl -o /dev/null -s -w '%{http_code}' http://localhost:8080/v3/api-docs)
-          if [ "$STATUS" != "200" ]; then
-            echo "::error::/v3/api-docs returned $STATUS"
-            cat app.log   # 起動ログを出して原因を探る
+          EC=$?
+          set -e
+
+          # 接続そのものに失敗したらログを出して終了
+          if [ "$EC" -ne 0 ]; then
+            echo "::error::failed to connect to /v3/api-docs (curl exit $EC)"
+            cat app.log
             exit 1
           fi
+
+          # HTTP 200 以外ならエラー
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::/v3/api-docs returned $STATUS"
+            cat app.log
+            exit 1
+          fi
+
+          # 最後に JSON の構文チェック
           curl -s http://localhost:8080/v3/api-docs | jq empty
 
       # YAML 仕様チェック
       - name: Check YAML Spec
         run: |
+         set +e
           STATUS=$(curl -o /dev/null -s -w '%{http_code}' http://localhost:8080/v3/api-docs.yaml)
+          EC=$?
+          set -e
+  
+          if [ "$EC" -ne 0 ]; then
+            echo "::error::failed to connect to /v3/api-docs.yaml (curl exit $EC)"
+            cat app.log
+            exit 1
+          fi
+  
           if [ "$STATUS" != "200" ]; then
             echo "::error::/v3/api-docs.yaml returned $STATUS"
             cat app.log
             exit 1
           fi
+  
           curl -s http://localhost:8080/v3/api-docs.yaml \
             | yq eval -j - \
             | jq empty
