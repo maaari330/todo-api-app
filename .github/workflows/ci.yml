@@ -40,9 +40,9 @@ jobs:
       # アプリをバックグラウンドで起動
       - name: Start Application
         run: |
-          nohup java -jar target/todo-api-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod > app.log 2>&1 &
+          nohup java -jar target/todo-api-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev > app.log 2>&1 &
           # 起動完了まで適宜待つ（20秒は目安です）
-          sleep 20
+          sleep 30
 
       # JSON 仕様チェック
       - name: Check JSON Spec
