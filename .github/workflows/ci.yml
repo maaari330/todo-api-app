@@ -24,12 +24,13 @@ jobs:
 
       - name: JSON Lint
         uses: ixxeL-actions/jsonlint@main
+        env:
+          SHELLOPTS: globstar
         with:
           working-dir: '**/*.json'
           extensions: 'json'
           fix: 'false'
-        env:
-          SHELLOPTS: globstar
+        
 
       - name: YAML Lint
         uses: kustomize-everything/action-yaml-linter@main
