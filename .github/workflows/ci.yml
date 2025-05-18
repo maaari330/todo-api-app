@@ -12,6 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+       # 1) Node.js をセットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'    # 好みのバージョンでOK
+
+      # 2) jsonlint をグローバルインストール
+      - name: Install jsonlint
+        run: npm install -g jsonlint
+
       - name: JSON Lint
         uses: ixxeL-actions/jsonlint@main
         with:
