@@ -86,7 +86,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USER }}/todo-api:latest
+          tags: user/todo-api:latest
 
   integration-tests:
     needs: docker-build-push
