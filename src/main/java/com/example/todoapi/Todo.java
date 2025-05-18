@@ -5,12 +5,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Entity
 public class Todo {
     @Id
-    @GeneratedValue
-    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description="TODO の一意なID", example="1")
     private Long id;   
 
