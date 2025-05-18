@@ -13,12 +13,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: JSON Lint
-        uses: tsch.js/jsonlint@v1
+        uses: kirkeaton/action-publint@v1
         with:
           files: '**/*.json'
 
       - name: YAML Lint
-        uses: cloudposse/action-yamllint@v1
+        uses: kustomize-everything/action-yaml-linter@main
         with:
           path: '**/*.y?(a)ml'
 
