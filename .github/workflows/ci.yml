@@ -72,6 +72,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Debug tag
+        run: echo "Tag= ${{ secrets.DOCKERHUB_USERNAME }}/todo-api:latest"
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -83,7 +86,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.DOCKERHUB_USER }}/todo-api:latest
+          tags: ${{ secrets.DOCKERHUB_USER }}/todo-api:latest
 
   integration-tests:
     needs: docker-build-push
@@ -97,7 +100,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
-          SPRING_DATASOURCE_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
       - name: Wait for DB healthy
         run: |
