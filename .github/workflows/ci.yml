@@ -25,9 +25,11 @@ jobs:
       - name: JSON Lint
         uses: ixxeL-actions/jsonlint@main
         with:
-          working-dir: 'src/main/resources/*.json'
+          working-dir: '**/*.json'
           extensions: 'json'
           fix: 'false'
+        env:
+          SHELLOPTS: globstar
 
       - name: YAML Lint
         uses: kustomize-everything/action-yaml-linter@main
