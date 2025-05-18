@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           # 好みのバージョンでOK
-          node-version: "18" 
+          node-version: "18"
 
       # 2) jsonlint をグローバルインストール
       - name: Install jsonlint
@@ -107,8 +107,8 @@ jobs:
             fi
             sleep 5
           done
-      
-      - name: Wait for App Healthy 
+
+      - name: Wait for App Healthy
         run: |
           for i in {1..12}; do
             if curl -sf http://localhost:8080/actuator/health; then

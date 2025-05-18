@@ -2,20 +2,20 @@
 spring:
   datasource:
     # MySQLのJDBC URL
-    url: jdbc:mysql://db:3306/${MYSQL_DATABASE} 
+    url: jdbc:mysql://db:3306/${MYSQL_DATABASE}
     username: root
     password: ${MYSQL_ROOT_PASSWORD}
     # MySQLドライバーの指定
-    driver-class-name: com.mysql.cj.jdbc.Driver 
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       # データベーススキーマの更新方法（適宜設定）
-      ddl-auto: update 
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         # MySQL8に対応するDialectを設定
-        dialect: org.hibernate.dialect.MySQL8Dialect 
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
 logging:
   level:
@@ -27,8 +27,8 @@ management:
     web:
       exposure:
         # 公開したいエンドポイントをカンマ区切りで指定
-        include: health, metrics, prometheus, env, loggers 
+        include: health, metrics, prometheus, env, loggers
   metrics:
     enable:
       # 全メトリクスをデフォルトで有効化（必要に応じて個別指定も可能）
-      all: true 
+      all: true

@@ -4,25 +4,25 @@ spring:
     name: todo-api
   profiles:
     # デフォルトで dev プロファイルを有効にする
-    active: dev 
+    active: dev
   datasource:
     # Dockerのコンテナ内でのMySQL接続URL
-    url: jdbc:mysql://db:3306/${MYSQL_DATABASE} 
+    url: jdbc:mysql://db:3306/${MYSQL_DATABASE}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       # テーブルが自動で作成される設定
-      ddl-auto: update 
+      ddl-auto: update
     show-sql: true
 
 springdoc:
   api-docs:
     # （必要なら）変更可能
-    path: /v3/api-docs 
+    path: /v3/api-docs
   swagger-ui:
     # UI の起動パス
-    path: /swagger-ui.html 
+    path: /swagger-ui.html
     # GET→POST→…の順にソート
-    operationsSorter: method 
+    operationsSorter: method

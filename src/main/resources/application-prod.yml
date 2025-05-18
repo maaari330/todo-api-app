@@ -8,7 +8,7 @@ spring:
 
   security:
     user:
-      name: ${ACTUATOR_USER:admin} 
+      name: ${ACTUATOR_USER:admin}
       password: ${ACTUATOR_PASSWORD:secret}
 
   jpa:
