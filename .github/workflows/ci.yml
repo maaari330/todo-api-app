@@ -23,13 +23,16 @@ jobs:
         run: npm install -g jsonlint
 
       - name: JSON Lint
-        uses: ixxeL-actions/jsonlint@main
-        env:
-          SHELLOPTS: globstar
-        with:
-          working-dir: '**/*.json'
-          extensions: 'json'
-          fix: 'false'
+        run: |
+          files=$(find . -type f -name '*.json')
+          if [ -z "$files" ]; then
+            echo "No JSON files to lint, skipping."
+            exit 0
+          fi
+          for f in $files; do
+            echo "Linting $f"
+            jsonlint "$f"
+          done
         
 
       - name: YAML Lint
