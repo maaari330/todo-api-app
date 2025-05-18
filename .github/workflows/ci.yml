@@ -1,7 +1,7 @@
 ---
 name: CI/CD
 
-on:
+"on":
   push:
     branches: [main]
   pull_request:
@@ -13,11 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-        # 1) Node.js をセットアップ
+      # 1) Node.js をセットアップ
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18" # 好みのバージョンでOK
+          # 好みのバージョンでOK
+          node-version: "18" 
 
       # 2) jsonlint をグローバルインストール
       - name: Install jsonlint
@@ -106,8 +107,8 @@ jobs:
             fi
             sleep 5
           done
-
-      - name: Wait for App Healthy ##明日はここから下のbashコマンドを解釈するところから開始
+      
+      - name: Wait for App Healthy 
         run: |
           for i in {1..12}; do
             if curl -sf http://localhost:8080/actuator/health; then
@@ -129,4 +130,6 @@ jobs:
 
       - name: Check YAML Spec
         run: |
-          curl -s http://localhost:8080/v3/api-docs.yaml | yq eval -j - | jq empty
+          curl -s http://localhost:8080/v3/api-docs.yaml | \
+          yq eval -j - | \
+          jq empty
