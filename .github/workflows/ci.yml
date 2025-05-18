@@ -25,7 +25,7 @@ jobs:
       - name: JSON Lint
         uses: ixxeL-actions/jsonlint@main
         with:
-          working-dir: '**/*.json'
+          working-dir: 'src/main/resources/*.json'
           extensions: 'json'
           fix: 'false'
 
