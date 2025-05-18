@@ -1,10 +1,11 @@
+---
 name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
@@ -12,11 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-       # 1) Node.js をセットアップ
+        # 1) Node.js をセットアップ
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'    # 好みのバージョンでOK
+          node-version: "18" # 好みのバージョンでOK
 
       # 2) jsonlint をグローバルインストール
       - name: Install jsonlint
@@ -25,7 +26,7 @@ jobs:
       - name: JSON Lint
         run: |
           files=$(find . -type f -name '*.json')
-          if [ -z "$files" ]; then
+          if [-z "$files"]; then
             echo "No JSON files to lint, skipping."
             exit 0
           fi
@@ -33,12 +34,12 @@ jobs:
             echo "Linting $f"
             jsonlint "$f"
           done
-        
 
       - name: YAML Lint
         uses: kustomize-everything/action-yaml-linter@main
         with:
-          path: '**/*.y?(a)ml'
+          yamllint_file_or_dir: "."
+          yamllint_strict: true
 
   build-and-test:
     needs: lint
@@ -49,12 +50,12 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: "17"
 
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
-          path: ~/.m2
+          yamllint_file_or_dir: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: Build & Package (skip tests)
@@ -62,7 +63,7 @@ jobs:
 
       - name: Run Unit Tests
         run: mvn test
-  
+
   docker-build-push:
     needs: build-and-test
     runs-on: ubuntu-latest
@@ -81,7 +82,7 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USER }}/todo-api:latest
-  
+
   integration-tests:
     needs: docker-build-push
     runs-on: ubuntu-latest
@@ -91,8 +92,8 @@ jobs:
       - name: Start services via Docker Compose
         run: docker-compose up -d
         env:
-          MYSQL_ROOT_PASSWORD:      ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE:           ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
 
@@ -100,13 +101,13 @@ jobs:
         run: |
           for i in {1..12}; do
             status=$(docker inspect --format='{{.State.Health.Status}}' todo-db)
-            if [ "$status" = "healthy" ]; then
+            if ["$status" = "healthy"]; then
               echo "DB is healthy"; break
             fi
             sleep 5
           done
 
-      - name: Wait for App Healthy  ##明日はここから下のbashコマンドを解釈するところから開始
+      - name: Wait for App Healthy ##明日はここから下のbashコマンドを解釈するところから開始
         run: |
           for i in {1..12}; do
             if curl -sf http://localhost:8080/actuator/health; then
