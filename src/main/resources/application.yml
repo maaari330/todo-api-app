@@ -4,10 +4,14 @@ spring:
   profiles:
     active: dev    # デフォルトで dev プロファイルを有効にする
   datasource:
-    # この設定はすべてのプロファイルで有効
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://db:3306/${MYSQL_DATABASE}    # Dockerのコンテナ内でのMySQL接続URL
+    username: ${SPRING_DATASOURCE_USERNAME} 
+    password: ${MYSQL_ROOT_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # テーブルが自動で作成される設定
+    show-sql: true
 
 springdoc:
   api-docs:

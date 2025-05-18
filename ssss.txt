@@ -1,0 +1,323 @@
+$ docker-compose up
+time="2025-05-15T23:28:11+09:00" level=warning msg="C:\\Users\\m_bbt\\Projects\\todo-api\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 3/3
+ ✔ Network todo-api_default  Created                                                                                                                       0.1s 
+ ✔ Container todo-api-db-1   Created                                                                                                                       0.5s 
+ ✔ Container todo-api-app-1  Created                                                                                                                       0.3s 
+Attaching to app-1, db-1
+db-1   | 2025-05-15 14:28:12+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.42-1.el9 started.
+db-1   | 2025-05-15 14:28:13+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+db-1   | 2025-05-15 14:28:13+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.42-1.el9 started.
+db-1   | 2025-05-15 14:28:13+00:00 [Note] [Entrypoint]: Initializing database files
+db-1   | 2025-05-15T14:28:13.637222Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+db-1   | 2025-05-15T14:28:13.637551Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.42) initializing of server in progress as process 80
+db-1   | 2025-05-15T14:28:13.666972Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.                                                         
+db-1   | 2025-05-15T14:28:14.778008Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+app-1  | 
+app-1  |   .   ____          _            __ _ _
+app-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+app-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+app-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+app-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+app-1  |  =========|_|==============|___/=/_/_/_/
+app-1  | 
+app-1  |  :: Spring Boot ::                (v3.4.5)
+app-1  | 
+app-1  | 2025-05-15T14:28:16.978Z  INFO 1 --- [todo-api] [           main] com.example.todoapi.TodoApiApplication   : Starting TodoApiApplication v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/app/todo-api.jar started by root in /app)
+app-1  | 2025-05-15T14:28:16.990Z  INFO 1 --- [todo-api] [           main] com.example.todoapi.TodoApiApplication   : The following 1 profile is active: "dev"
+db-1   | 2025-05-15T14:28:18.553434Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+app-1  | 2025-05-15T14:28:21.306Z  INFO 1 --- [todo-api] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+app-1  | 2025-05-15T14:28:21.502Z  INFO 1 --- [todo-api] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 153 ms. Found 1 JPA repository interface.
+app-1  | 2025-05-15T14:28:23.977Z  INFO 1 --- [todo-api] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+app-1  | 2025-05-15T14:28:24.028Z  INFO 1 --- [todo-api] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+app-1  | 2025-05-15T14:28:24.036Z  INFO 1 --- [todo-api] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+app-1  | 2025-05-15T14:28:24.210Z  INFO 1 --- [todo-api] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+app-1  | 2025-05-15T14:28:24.221Z  INFO 1 --- [todo-api] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7004 ms                                                                                                                                           
+app-1  | 2025-05-15T14:28:25.411Z  INFO 1 --- [todo-api] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+app-1  | 2025-05-15T14:28:25.548Z  INFO 1 --- [todo-api] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+app-1  | 2025-05-15T14:28:25.655Z  INFO 1 --- [todo-api] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+db-1   | 2025-05-15 14:28:26+00:00 [Note] [Entrypoint]: Database files initialized
+db-1   | 2025-05-15 14:28:26+00:00 [Note] [Entrypoint]: Starting temporary server
+app-1  | 2025-05-15T14:28:26.449Z  INFO 1 --- [todo-api] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+db-1   | 2025-05-15T14:28:26.472753Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+db-1   | 2025-05-15T14:28:26.478628Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.42) starting as process 124
+db-1   | 2025-05-15T14:28:26.533278Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.                                                         
+app-1  | 2025-05-15T14:28:26.564Z  INFO 1 --- [todo-api] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+db-1   | 2025-05-15T14:28:27.037825Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+db-1   | 2025-05-15T14:28:27.696696Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+db-1   | 2025-05-15T14:28:27.696873Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+db-1   | 2025-05-15T14:28:27.706062Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.                                                                                                     
+db-1   | 2025-05-15T14:28:27.765116Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/run/mysqld/mysqlx.sock
+db-1   | 2025-05-15T14:28:27.765539Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.42'  socket: '/var/run/mysqld/mysqld.sock'  port: 0  MySQL Community Server - GPL.                                                                                                                  
+db-1   | 2025-05-15 14:28:27+00:00 [Note] [Entrypoint]: Temporary server started.
+app-1  | 2025-05-15T14:28:27.831Z  WARN 1 --- [todo-api] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+app-1  | 2025-05-15T14:28:27.832Z ERROR 1 --- [todo-api] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+app-1  |                                                                                                                                                        
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+db-1   | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+app-1  | 2025-05-15T14:28:27.841Z  WARN 1 --- [todo-api] [           main] o.h.e.j.e.i.JdbcEnvironmentInitiator     : HHH000342: Could not obtain connection to query metadata                                                                                                                                                  
+app-1  | 
+app-1  | org.hibernate.exception.JDBCConnectionException: unable to obtain isolated JDBC connection [Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+app-1  |        at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                                   
+app-1  |        at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                              
+app-1  |        at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:116) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                
+app-1  |        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:320) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                     
+app-1  |        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:129) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                         
+app-1  |        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:81) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                          
+app-1  |        at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                     
+app-1  |        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                             
+app-1  |        at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                         
+app-1  |        at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.boot.model.relational.Database.<init>(Database.java:45) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:226) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:194) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                                   
+app-1  |        at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:171) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                                    
+app-1  |        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1442) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                        
+app-1  |        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1513) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                           
+app-1  |        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66) ~[spring-orm-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                      
+app-1  |        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                                   
+app-1  |        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                       
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1865) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                               
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1814) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                  
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                     
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                       
+app-1  |        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                                             
+app-1  |        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                                 
+app-1  |        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207) ~[spring-beans-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970) ~[spring-context-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.6.jar!/:6.2.6]                                                                                                                                                              
+app-1  |        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.5.jar!/:3.4.5]                                                                                                                                        
+app-1  |        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.5.jar!/:3.4.5]                                  
+app-1  |        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at com.example.todoapi.TodoApiApplication.main(TodoApiApplication.java:10) ~[!/:0.0.1-SNAPSHOT]
+app-1  |        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+app-1  |        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+app-1  |        at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+app-1  |        at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+app-1  |        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102) ~[todo-api.jar:0.0.1-SNAPSHOT]
+app-1  |        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64) ~[todo-api.jar:0.0.1-SNAPSHOT]
+app-1  |        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40) ~[todo-api.jar:0.0.1-SNAPSHOT]
+app-1  | Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure                                                           
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+app-1  |        at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]                       
+app-1  |        at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:137) ~[HikariCP-5.1.0.jar!/:na]                                  
+app-1  |        at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:360) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:202) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:461) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:550) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:98) ~[HikariCP-5.1.0.jar!/:na]                                                      
+app-1  |        at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                   
+app-1  |        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:467) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                 
+app-1  |        at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                 
+app-1  |        ... 42 common frames omitted
+app-1  | Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+app-1  |        at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+app-1  |        at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+app-1  |        at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+app-1  |        at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
+app-1  |        at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]                  
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]                                          
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        ... 55 common frames omitted
+app-1  | Caused by: java.net.ConnectException: Connection refused
+app-1  |        at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
+app-1  |        at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]                                                                               
+app-1  |        at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542) ~[na:na]                                                       
+app-1  |        at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597) ~[na:na]
+app-1  |        at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
+app-1  |        at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]                                                                                  
+app-1  |        at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        ... 58 common frames omitted
+app-1  | 
+app-1  | 2025-05-15T14:28:27.939Z  WARN 1 --- [todo-api] [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+app-1  | 2025-05-15T14:28:27.946Z  WARN 1 --- [todo-api] [           main] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead                                                                                                            
+app-1  | 2025-05-15T14:28:28.031Z  INFO 1 --- [todo-api] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+app-1  |        Database JDBC URL [Connecting through datasource 'HikariDataSource (null)']
+app-1  |        Database driver: undefined/unknown
+app-1  |        Database version: 8.0                                                                                                                           
+app-1  |        Autocommit mode: undefined/unknown
+app-1  |        Isolation level: undefined/unknown
+app-1  |        Minimum pool size: undefined/unknown
+app-1  |        Maximum pool size: undefined/unknown
+app-1  | 2025-05-15T14:28:30.452Z  INFO 1 --- [todo-api] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+app-1  | 2025-05-15T14:28:30.525Z  INFO 1 --- [todo-api] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+db-1   | Warning: Unable to load '/usr/share/zoneinfo/iso3166.tab' as time zone. Skipping it.
+db-1   | Warning: Unable to load '/usr/share/zoneinfo/leap-seconds.list' as time zone. Skipping it.
+db-1   | Warning: Unable to load '/usr/share/zoneinfo/leapseconds' as time zone. Skipping it.                                                                   
+app-1  | 2025-05-15T14:28:31.532Z  WARN 1 --- [todo-api] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+app-1  | 2025-05-15T14:28:31.532Z ERROR 1 --- [todo-api] [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+app-1  | 2025-05-15T14:28:31.554Z ERROR 1 --- [todo-api] [           main] j.LocalContainerEntityManagerFactoryBean : Failed to initialize JPA EntityManagerFactory: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to open JDBC Connection for DDL execution [Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+app-1  | 2025-05-15T14:28:31.558Z  WARN 1 --- [todo-api] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to open JDBC Connection for DDL execution [Communications link failure  
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+app-1  | 2025-05-15T14:28:31.575Z  INFO 1 --- [todo-api] [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+app-1  | 2025-05-15T14:28:31.665Z  INFO 1 --- [todo-api] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+app-1  | 
+app-1  | Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+app-1  | 2025-05-15T14:28:31.729Z ERROR 1 --- [todo-api] [           main] o.s.boot.SpringApplication               : Application run failed
+app-1  | 
+app-1  | org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to open JDBC Connection for DDL execution [Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1818) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                  
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                     
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                       
+app-1  |        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                                 
+app-1  |        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207) ~[spring-beans-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970) ~[spring-context-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.6.jar!/:6.2.6]                                                                                                                                                              
+app-1  |        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.5.jar!/:3.4.5]                                                                                                                                        
+app-1  |        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.5.jar!/:3.4.5]                                  
+app-1  |        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351) ~[spring-boot-3.4.5.jar!/:3.4.5]
+app-1  |        at com.example.todoapi.TodoApiApplication.main(TodoApiApplication.java:10) ~[!/:0.0.1-SNAPSHOT]
+app-1  |        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]                                                      
+app-1  |        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+app-1  |        at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+app-1  |        at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+app-1  |        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102) ~[todo-api.jar:0.0.1-SNAPSHOT]                                     
+app-1  |        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64) ~[todo-api.jar:0.0.1-SNAPSHOT]
+app-1  |        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40) ~[todo-api.jar:0.0.1-SNAPSHOT]
+app-1  | Caused by: jakarta.persistence.PersistenceException: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.JDBCConnectionException: Unable to open JDBC Connection for DDL execution [Communications link failure                                           
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+app-1  |        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:431) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                      
+app-1  |        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                                   
+app-1  |        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                       
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1865) ~[spring-beans-6.2.6.jar!/:6.2.6]
+app-1  |        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1814) ~[spring-beans-6.2.6.jar!/:6.2.6]                                                                                                                                  
+app-1  |        ... 22 common frames omitted
+app-1  | Caused by: org.hibernate.exception.JDBCConnectionException: Unable to open JDBC Connection for DDL execution [Communications link failure
+app-1  |                                                                                                                                                        
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+app-1  |        at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                                   
+app-1  |        at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                              
+app-1  |        at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:74) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                  
+app-1  |        at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:39) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                  
+app-1  |        at org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcConnection(ImprovedExtractionContextImpl.java:63) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                             
+app-1  |        at org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcDatabaseMetaData(ImprovedExtractionContextImpl.java:70) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                       
+app-1  |        at org.hibernate.tool.schema.extract.internal.InformationExtractorJdbcDatabaseMetaDataImpl.processTableResultSet(InformationExtractorJdbcDatabaseMetaDataImpl.java:65) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                        
+app-1  |        at org.hibernate.tool.schema.extract.internal.AbstractInformationExtractorImpl.getTables(AbstractInformationExtractorImpl.java:570) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.getTablesInformation(DatabaseInformationImpl.java:122) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1 exited with code 1
+app-1  |        at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:72) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:233) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:112) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                                     
+app-1  |        at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                              
+app-1  |        at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                   
+app-1  |        at java.base/java.util.HashMap.forEach(HashMap.java:1421) ~[na:na]
+app-1  |        at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                            
+app-1  |        at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                     
+app-1  |        at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                              
+app-1  |        at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                                                                            
+app-1  |        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                  
+app-1  |        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                         
+app-1  |        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419) ~[spring-orm-6.2.6.jar!/:6.2.6]                                                                                                                                      
+app-1  |        ... 26 common frames omitted
+app-1  | Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+app-1  |        at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]              
+app-1  |        at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:137) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:360) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:202) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:461) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:550) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:98) ~[HikariCP-5.1.0.jar!/:na]
+app-1  |        at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111) ~[HikariCP-5.1.0.jar!/:na]                                       
+app-1  |        at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:467) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]
+app-1  |        at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:46) ~[hibernate-core-6.6.13.Final.jar!/:6.6.13.Final]                                                                                                  
+app-1  |        ... 47 common frames omitted
+app-1  | Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+app-1  | 
+app-1  | The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+app-1  |        at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]                                            
+app-1  |        at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+app-1  |        at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+app-1  |        at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
+app-1  |        at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]                  
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]                 
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]                                          
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        ... 60 common frames omitted
+app-1  | Caused by: java.net.ConnectException: Connection refused                                                                                               
+app-1  |        at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
+app-1  |        at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]
+app-1  |        at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:542) ~[na:na]                                                       
+app-1  |        at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:597) ~[na:na]
+app-1  |        at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
+app-1  |        at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
+app-1  |        at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]
+app-1  |        at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar!/:8.0.33]              
+app-1  |        ... 63 common frames omitted
+app-1  | 
+db-1   | Warning: Unable to load '/usr/share/zoneinfo/tzdata.zi' as time zone. Skipping it.
+db-1   | Warning: Unable to load '/usr/share/zoneinfo/zone.tab' as time zone. Skipping it.
+db-1   | Warning: Unable to load '/usr/share/zoneinfo/zone1970.tab' as time zone. Skipping it.
+db-1   | 2025-05-15 14:28:35+00:00 [Note] [Entrypoint]: Creating database todo
+db-1   | 
+db-1   | 2025-05-15 14:28:35+00:00 [Note] [Entrypoint]: Stopping temporary server
+db-1   | 2025-05-15T14:28:35.167210Z 11 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.42).                 
+db-1   | 2025-05-15T14:28:36.802687Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 8.0.42)  MySQL Community Server - GPL.
+db-1   | 2025-05-15 14:28:37+00:00 [Note] [Entrypoint]: Temporary server stopped
+db-1   | 
+db-1   | 2025-05-15 14:28:37+00:00 [Note] [Entrypoint]: MySQL init process done. Ready for start up.                                                            
+db-1   | 
+db-1   | 2025-05-15T14:28:37.584940Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+db-1   | 2025-05-15T14:28:37.587877Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.42) starting as process 1
+db-1   | 2025-05-15T14:28:37.609179Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.                                                         
+db-1   | 2025-05-15T14:28:38.084703Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+db-1   | 2025-05-15T14:28:38.641635Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+db-1   | 2025-05-15T14:28:38.641804Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.                                                                                                                                                    
+db-1   | 2025-05-15T14:28:38.649897Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.                                                                                                     
+db-1   | 2025-05-15T14:28:38.711868Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+db-1   | 2025-05-15T14:28:38.712259Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.42'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.   

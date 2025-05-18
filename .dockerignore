@@ -1,0 +1,23 @@
+# Maven build artifacts
+/target
+**/target
+
+# Git files
+/.git
+.gitignore
+
+# IDE files
+/.idea
+.vscode
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Environment variables file
+.env
