@@ -27,7 +27,10 @@ management:
     web:
       exposure:
         # 公開したいエンドポイントをカンマ区切りで指定
-        include: health, metrics, prometheus, env, loggers
+        include: health, metrics, prometheus, env, loggers, info, mappings
+  endpoint:
+    mappings:
+      access: unrestricted
   metrics:
     enable:
       # 全メトリクスをデフォルトで有効化（必要に応じて個別指定も可能）
