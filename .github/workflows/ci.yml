@@ -15,7 +15,7 @@ jobs:
 
       # 1) Node.js をセットアップ
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           # 好みのバージョンでOK
           node-version: "18"
@@ -41,6 +41,23 @@ jobs:
         with:
           yamllint_file_or_dir: "."
           yamllint_strict: true
+  
+  frontend-build:
+    needs: lint  
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: cd todo-frontend && npm ci
+
+      - name: Build frontend
+        run: cd todo-frontend && npm run build
 
   build-and-test:
     needs: lint
@@ -57,14 +74,14 @@ jobs:
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
-          yamllint_file_or_dir: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('todo-api/pom.xml') }}
 
       - name: Build & Package (skip tests)
-        run: mvn clean package -DskipTests
+        run: cd app & mvn clean package -DskipTests
 
       - name: Run Unit Tests
-        run: mvn test
+        run: cd app & mvn test
 
   docker-build-push:
     needs: build-and-test
@@ -84,7 +101,7 @@ jobs:
       - name: Build and Push Image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./todo-api
           push: true
           tags: ${{ secrets.DOCKERHUB_USER }}/todo-api:latest
 
@@ -99,19 +116,19 @@ jobs:
           cat <<EOF > .env
           MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           EOF
 
       - name: Start services via Docker Compose
-        run: docker compose up -d
+        run: docker compose -f docker-compose.yml --env-file .env up -d
 
       - name: Wait for DB healthy
         run: |
           for i in {1..12}; do
             status=$(docker inspect --format='{{.State.Health.Status}}' todo-db)
-            if ["$status" = "healthy"]; then
+            if [ "$status" = "healthy" ]; then
               echo "DB is healthy"; break
             fi
             sleep 5

@@ -109,6 +109,7 @@ class TodoServiceTest {
     void toggleDone_flipsAndSaves() {
         Todo before = new Todo(1L,"t",false);
         when(repo.findById(1L)).thenReturn(Optional.of(before));
+        when(repo.save(before)).thenReturn(before);
 
         Todo result = service.toggleDone(1L);
         assertThat(result.isDone()).isTrue();

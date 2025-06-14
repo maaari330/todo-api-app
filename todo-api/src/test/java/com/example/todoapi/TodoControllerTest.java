@@ -104,7 +104,7 @@ class TodoControllerTest {
         .isInstanceOf(ResponseStatusException.class)
         .satisfies(ex -> {
             var rse = (ResponseStatusException) ex;
-            assertThat(rse.getStatusCode()).isEqualTo(404);
+            assertThat(rse.getStatusCode().value()).isEqualTo(404);
         });
 
         verify(mockService).update(id, req);

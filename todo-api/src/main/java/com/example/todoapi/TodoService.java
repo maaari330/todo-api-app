@@ -1,8 +1,10 @@
 package com.example.todoapi;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @Service
@@ -32,7 +34,7 @@ public class TodoService {
     @Transactional
     public Todo update(Long id, UpdateTodoRequest req) {
         Todo t = repo.findById(id)
-                     .orElseThrow(() -> new EntityNotFoundException("Todo not found"));
+                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found"));
         t.setTitle(req.getTitle());
         if (req.getDone() != null) {
             t.setDone(req.getDone());
@@ -50,7 +52,7 @@ public class TodoService {
     @Transactional
     public Todo toggleDone(Long id) {
         Todo t = repo.findById(id)
-                     .orElseThrow(() -> new EntityNotFoundException("Todo not found"));
+                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found"));
         t.setDone(!t.isDone());
         return repo.save(t);
     }
