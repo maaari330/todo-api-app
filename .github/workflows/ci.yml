@@ -79,11 +79,13 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('todo-api/pom.xml') }}
 
-      - name: Build & Package (skip tests)
-        run: cd todo-api & mvn clean package -DskipTests
+      - name: Build backend
+        run: mvn clean package -DskipTests
+        working-directory: ./todo-api
 
       - name: Run Unit Tests
-        run: cd todo-api & mvn test
+        run: mvn test
+        working-directory: ./todo-api
 
   docker-build-push:
     needs: build-and-test
