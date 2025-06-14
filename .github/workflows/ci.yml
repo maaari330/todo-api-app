@@ -78,10 +78,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('todo-api/pom.xml') }}
 
       - name: Build & Package (skip tests)
-        run: cd app & mvn clean package -DskipTests
+        run: cd todo-api & mvn clean package -DskipTests
 
       - name: Run Unit Tests
-        run: cd app & mvn test
+        run: cd todo-api & mvn test
 
   docker-build-push:
     needs: build-and-test
