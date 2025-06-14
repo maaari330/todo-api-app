@@ -15,7 +15,7 @@ jobs:
 
       # 1) Node.js をセットアップ
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           # 好みのバージョンでOK
           node-version: "18"
@@ -41,9 +41,9 @@ jobs:
         with:
           yamllint_file_or_dir: "."
           yamllint_strict: true
-  
+
   frontend-build:
-    needs: lint  
+    needs: lint 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
