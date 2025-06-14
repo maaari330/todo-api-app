@@ -21,7 +21,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./todo-api
       dockerfile: Dockerfile
     env_file:
       - .env
