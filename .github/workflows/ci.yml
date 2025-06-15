@@ -154,13 +154,13 @@ jobs:
         run: |
           for i in {1..18}; do
             if curl -sf http://localhost:8080/actuator/health; then
-              echo "App is up"; exit 0
+              echo "App is up"; break
             fi
             sleep 5
           done
           echo "App did not start in time"
-          docker ps -a
-          docker logs $(docker ps -qf "name=app")
+          CONTAINER_ID=$(docker ps -aqf "name=app")
+          docker logs "$CONTAINER_ID" || true
           exit 1
 
       - name: OpenAPI Endpoint Checks

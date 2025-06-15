@@ -31,7 +31,7 @@ services:
         condition: service_healthy
     command: >
       sh -c "
-        java -jar /app/todo-api.jar
+        java -jar /app/app.jar
       "
     environment:
       SPRING_PROFILES_ACTIVE: dev
