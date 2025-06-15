@@ -135,11 +135,6 @@ jobs:
           sleep 2
           docker exec "$CONTAINER_ID" ls -lh /app || echo "Failed to list /app"
 
-      - name: Show app container logs (always run)
-        if: always()
-        run: |
-          docker logs $(docker ps -aqf "name=app") || true
-
       - name: Wait for DB healthy
         run: |
           for i in {1..12}; do
@@ -154,7 +149,8 @@ jobs:
         run: |
           for i in {1..18}; do
             if curl -sf http://localhost:8080/actuator/health; then
-              echo "App is up"; break
+              echo "App is up"
+              exit 0 
             fi
             sleep 5
           done
