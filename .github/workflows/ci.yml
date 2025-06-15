@@ -150,7 +150,7 @@ jobs:
           for i in {1..18}; do
             if curl -sf http://localhost:8080/actuator/health; then
               echo "App is up"
-              exit 0 
+              exit 0
             fi
             sleep 5
           done
