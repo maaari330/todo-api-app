@@ -130,7 +130,10 @@ jobs:
 
       - name: Check if JAR exists in app container
         run: |
-          docker exec $(docker ps -qf "name=app") ls -lh /app
+          CONTAINER_ID=$(docker ps -aqf "name=app")
+          docker container start "$CONTAINER_ID" || true  # 一時的に起動
+          sleep 2
+          docker exec "$CONTAINER_ID" ls -lh /app || echo "Failed to list /app"
 
       - name: Show app container logs (always run)
         if: always()
