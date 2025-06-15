@@ -127,7 +127,7 @@ jobs:
 
       - name: Start services via Docker Compose
         run: docker compose -f docker-compose.yml --env-file .env up -d
-      
+
       - name: Check if JAR exists in app container
         run: |
           docker exec $(docker ps -qf "name=app") ls -lh /app
