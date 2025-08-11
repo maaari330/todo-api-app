@@ -11,3 +11,17 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+  security:
+    user:
+      name: admin        # テスト用 Actuator 認証ユーザー
+      password: secret
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+jwt:
+  secretKey: my-super-secure-secret-key-9876543210
+  expiration: 86400000

@@ -1,17 +1,6 @@
 ---
 spring:
-  datasource:
-    # MySQLのJDBC URL
-    url: jdbc:mysql://db:3306/${MYSQL_DATABASE}
-    username: root
-    password: ${MYSQL_ROOT_PASSWORD}
-    # MySQLドライバーの指定
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    hibernate:
-      # データベーススキーマの更新方法（適宜設定）
-      ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
         # MySQL8に対応するDialectを設定
@@ -21,6 +10,7 @@ logging:
   level:
     "[org.hibernate.SQL]": DEBUG
     "[org.hibernate.tool.schema.internal]": DEBUG
+    "[org.flywaydb]": DEBUG 
 
 management:
   endpoints:
@@ -28,6 +18,7 @@ management:
       exposure:
         # 公開したいエンドポイントをカンマ区切りで指定
         include: health, metrics, prometheus, env, loggers, info, mappings
+      base-path: /actuator
   endpoint:
     mappings:
       access: unrestricted

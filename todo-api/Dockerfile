@@ -4,7 +4,9 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 COPY src ./src
-RUN mvn clean package -DskipTests
+
+RUN mvn -Dmaven.test.skip=true clean package
+# RUN mvn clean package -DskipTests
 
 # runtime stage
 FROM openjdk:17-jdk-slim

@@ -1,5 +1,8 @@
 ---
 spring:
+  config:
+    import:
+      - optional:file:../.env[.properties]
   application:
     name: todo-api
   profiles:
@@ -12,10 +15,19 @@ spring:
     password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    # Hibernate:エンティティクラス（@Entity）を定義すると、Hibernate がそのクラスとテーブルを対応づけ
     hibernate:
       # テーブルが自動で作成される設定
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
+  flyway:
+    enabled: ${SPRING_FLYWAY_ENABLED}
+    locations: ${SPRING_FLYWAY_LOCATIONS}
+    baseline-on-migrate: true  # 既存テーブルがある場合、初回適用時にベースラインを作る
+  security:
+    user:
+      name: ${ACTUATOR_USER}
+      password: ${ACTUATOR_PASSWORD}
 
 springdoc:
   api-docs:
@@ -26,3 +38,20 @@ springdoc:
     path: /swagger-ui.html
     # GET→POST→…の順にソート
     operationsSorter: method
+
+server:
+  error:
+    # エラーレスポンスに例外メッセージを含める
+    include-message: always
+    # エラーレスポンスにスタックトレースを含める
+    include-stacktrace: always
+
+jwt:
+  secretKey: ${JWT_SECRETKEY}
+  expiration: ${JWT_EXPIRATION}
+
+logging:
+  level:
+    '[org.springframework.http.converter.json]': DEBUG
+    '[org.springframework.security]': DEBUG
+    '[org.springframework.web]': DEBUG
