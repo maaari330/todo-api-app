@@ -6,12 +6,13 @@
 /.git
 .gitignore
 
-# IDE files
-/.idea
+# VCS / editor / OS files
+.git
+.gitignore
+.gitattributes
 .vscode
+.idea
 *.iml
-
-# OS files
 .DS_Store
 Thumbs.db
 
@@ -19,5 +20,21 @@ Thumbs.db
 *.log
 *.tmp
 
-# Environment variables file
+# Environment variables files
 .env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# Node/JS files
+node_modules
+dist
+build
+coverage
+.eslintcache
+.npmrc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

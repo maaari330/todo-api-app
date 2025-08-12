@@ -37,6 +37,15 @@ services:
     ports:
       - "8080:8080"
 
-# ボリュームを定義
+  web:
+    build:
+      context: ./todo-frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - app
+    ports:
+      - "3000:80" # localhost:3000 に来たHTTP通信を、Nginxコンテナの :80 に転送
+
+# ボリュームを定義（コンテナを再起動／再ビルドしても DBデータは残る）
 volumes:
   db-data:

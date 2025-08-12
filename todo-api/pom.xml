@@ -43,7 +43,6 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>  <!-- 適宜最新の安定版に置き換えてください -->
 			<scope>runtime</scope>
 		</dependency>
 
@@ -116,6 +115,14 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
+		</dependency>
 
 	</dependencies>
 
@@ -139,7 +146,6 @@
 						<path>
 							<groupId>org.springframework.boot</groupId>  <!--　@ConfigurationPropertiesをつけたクラスのメタデータを作成 -->
 							<artifactId>spring-boot-configuration-processor</artifactId>
-							<version>3.4.7</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
