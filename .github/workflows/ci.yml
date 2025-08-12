@@ -42,7 +42,7 @@ jobs:
           yamllint_file_or_dir: "."
           yamllint_strict: true
 
-  frontend-build:
+  frontend-build-and-test:
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -55,6 +55,9 @@ jobs:
 
       - name: Install dependencies
         run: cd todo-frontend && npm ci
+
+      - name: Run frontend Unit tests
+        run: cd todo-frontend && npm test -- --watchAll=false
 
       - name: Build frontend
         run: cd todo-frontend && npm run build
@@ -175,3 +178,9 @@ jobs:
           curl -s http://localhost:8080/v3/api-docs.yaml | \
           yq eval -j - | \
           jq empty
+
+      - name: Actuator Health Check
+        run: |
+          # Basic 認証付きで /actuator/health を叩いて 200 を期待
+          curl -u "${{ secrets.ACTUATOR_USER }}:${{ secrets.ACTUATOR_PASSWORD }}" \
+               -f http://localhost:8080/actuator/health

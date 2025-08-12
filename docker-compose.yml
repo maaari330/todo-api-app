@@ -6,14 +6,12 @@ services:
     restart: always
     env_file:
       - .env
+    volumes:
+      - db-data:/var/lib/mysql
     ports:
       - "3306:3306"
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD}",
-        ]
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD}" ]
       interval: 15s
       timeout: 10s
       retries: 8
@@ -23,20 +21,22 @@ services:
     build:
       context: ./todo-api
       dockerfile: Dockerfile
+    working_dir: /app
     env_file:
       - .env
     image: todo-api:latest
     depends_on:
       db:
         condition: service_healthy
-    command: >
-      sh -c "
-        java -jar /app/app.jar
-      "
+
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "8080:8080"
+
+# ボリュームを定義
+volumes:
+  db-data:

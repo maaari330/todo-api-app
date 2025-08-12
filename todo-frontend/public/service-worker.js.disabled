@@ -1,0 +1,79 @@
+const CACHE_NAME = 'todo-pwa-cache-v1';
+const PRECACHE_URLS = [
+  '/',                   // ルートの HTML
+  '/index.html',         // メイン HTML
+  '/favicon.ico',        // アイコン
+  '/manifest.json',      // PWA マニフェスト
+  '/logo192.png',        // CRA デフォルトアイコン
+  '/logo512.png',        // CRA デフォルトアイコン
+  'robots.txt',
+  // CSS ファイル（名前に hash が入っているのでビルド後に合わせる）
+  '/static/css/main.edaa71d8.css',
+  // JS ファイルも同様に
+  '/static/js/453.7b90e472.chunk.js',
+  '/static/js/main.a25c5c36.js',
+];
+
+// インストール時：プリキャッシュ
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(PRECACHE_URLS))
+      .then(() => self.skipWaiting())
+  );
+});
+
+// アクティベート時：古いキャッシュを削除
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+// フェッチ時：API と 静的アセットで分岐
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // 1) /todos API のキャッシュロジック
+  if (url.pathname === '/todos') {
+    event.respondWith(
+      // キャッシュにあれば先に返し、なければネットワーク → キャッシュに保存
+      caches.match(event.request).then(cached => {
+        if (cached) {
+          return cached;
+        }
+        return fetch(event.request)
+          .then(networkRes => {
+            // 正常レスポンスをキャッシュに入れる
+            if (networkRes && networkRes.status === 200) {
+              const copy = networkRes.clone();
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+            }
+            return networkRes;
+          })
+          .catch(() => {
+            // オフラインかエラー時：キャッシュもないなら空の配列 JSON を返す
+            return new Response(JSON.stringify([]), {
+              headers: { 'Content-Type': 'application/json' }
+            });
+          });
+      })
+    );
+    return;  // このルートはここまで
+  }
+
+  // 2) それ以外の静的アセットはプリキャッシュ優先
+  event.respondWith(
+    caches.match(event.request).then(cached =>
+      cached || fetch(event.request)
+    )
+  );
+});
