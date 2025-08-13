@@ -11,7 +11,7 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 # アプリ本体
 COPY . .
 
-# 本番ビルド　CRA: /app/build が生成される
+# 本番ビルド　CRA: /app/build が生成される　# CRA: 
 RUN npm run build
 
 
@@ -23,7 +23,7 @@ WORKDIR /usr/share/nginx/html
 # SPA ルーティング & 圧縮のための nginx 設定
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-# ビルド成果物をコピー
+# CRAビルド成果物を Nginx のドキュメントルートにコピー
 COPY --from=builder /app/build /usr/share/nginx/html/
 # このコンテナは 80/tcp を待ち受ける　とドキュメント的宣言（実際の公開は docker-compose の ports: "3000:80" で行う）
 EXPOSE 80

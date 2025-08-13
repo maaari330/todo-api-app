@@ -14,7 +14,7 @@ import CalendarPage from './pages/CalendarPage';
 // AppWithAuth 以下どこからでも認証状態を AuthContext で参照できる
 export default function App() {
   return (
-    <AuthProvider>     
+    <AuthProvider>
       <AppWithAuth />
     </AuthProvider>
   );
@@ -26,7 +26,7 @@ function AppWithAuth() {
   // AuthProvider で取得中ならスピナーを表示
   if (loading) return <LoadingSpinner />;
 
-  // URL に応じて表示コンポーネントを切り替える
+  // URL に応じて表示コンポーネントを切り替える（React Routerを活用）
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-gray-50">
@@ -43,8 +43,8 @@ function AppWithAuth() {
             {/* プライベートルート */}
             {/* Todo一覧、カテゴリ一覧、タグ一覧ページ */}
             <Route path="/todos" element={user ? <TodosPage /> : <Navigate to="/login" replace />} />
-            <Route path="/categories" element={user ? <CategoryPage />  : <Navigate to="/login" replace />} />
-            <Route path="/tags"       element={user ? <TagPage />        : <Navigate to="/login" replace />} />
+            <Route path="/categories" element={user ? <CategoryPage /> : <Navigate to="/login" replace />} />
+            <Route path="/tags" element={user ? <TagPage /> : <Navigate to="/login" replace />} />
             <Route path="/calendar" element={user ? <CalendarPage /> : <Navigate to="/login" replace />} />
             {/* 存在しないパスはホームへ */}
             <Route path="*" element={<Navigate to={user ? "/todos" : "/login"} replace />} />
