@@ -46,7 +46,7 @@ public class TodoService {
     @Transactional
     public TodoResponse create(CreateTodoRequest req, UserDetails user) {
         User createdUser = userRepo.findByUsername(user.getUsername())
-            .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
         Todo todo = new Todo(); // リクエストDTO → Entity マッピング
         todo.setOwner(createdUser);
         todo.setTitle(req.getTitle());
@@ -58,14 +58,15 @@ public class TodoService {
 
         if (req.getCategoryId() != null) {
             Category cat = categoryRepo.findById(req.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("カテゴリが見つかりません: " + req.getCategoryId()));;
+                    .orElseThrow(() -> new IllegalArgumentException("カテゴリが見つかりません: " + req.getCategoryId()));
+            ;
             todo.setCategory(cat);
         }
         if (req.getTagIds() != null) {
             Set<Tag> tags = req.getTagIds().stream()
-                .map(id -> tagRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("タグが見つかりません: " + id)))
-                .collect(Collectors.toSet());
+                    .map(id -> tagRepo.findById(id)
+                            .orElseThrow(() -> new IllegalArgumentException("タグが見つかりません: " + id)))
+                    .collect(Collectors.toSet());
             todo.setTags(tags);
         }
         Todo created = repo.save(todo);
@@ -74,13 +75,15 @@ public class TodoService {
 
     /** 一覧取得 */
     @Transactional(readOnly = true)
-    public Page<TodoResponse> list(String keyword, Boolean done, Long categoryId, Set<Long> tagIds, Pageable pageable, UserDetails principal) { 
-        User current = userRepo.findByUsername(principal.getUsername()).orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
+    public Page<TodoResponse> list(String keyword, Boolean done, Long categoryId, Set<Long> tagIds, Pageable pageable,
+            UserDetails principal) {
+        User current = userRepo.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
         // ベースの SpecificationをTodoSpecificationsから作成
         Specification<Todo> spec = Specification.where(TodoSpecifications.titleContains(keyword))
-            .and(TodoSpecifications.doneIs(done))
-            .and(TodoSpecifications.categoryIs(categoryId))
-            .and(TodoSpecifications.hasTags(tagIds));
+                .and(TodoSpecifications.doneIs(done))
+                .and(TodoSpecifications.categoryIs(categoryId))
+                .and(TodoSpecifications.hasTags(tagIds));
         // 一般ユーザーなら owner 制御を追加
         boolean isAdmin = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         if (!isAdmin) {
@@ -96,9 +99,9 @@ public class TodoService {
     @Transactional
     public TodoResponse update(Long id, UpdateTodoRequest req, UserDetails user) {
         Todo existing = repo.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Todo が見つかりません: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Todo が見つかりません: " + id));
         User current = userRepo.findByUsername(user.getUsername())
-            .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
         if (!existing.getOwner().getId().equals(current.getId())) {
             throw new AccessDeniedException("自分のタスクのみ更新できます");
         }
@@ -107,13 +110,11 @@ public class TodoService {
         existing.setDueDate(req.getDueDate());
         existing.setRepeatType(req.getRepeatType());
 
-
         System.out.println("▶▶ repeatType in update request: " + req.getRepeatType());
-
 
         if (req.getCategoryId() != null) {
             Category cat = categoryRepo.findById(req.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("カテゴリが見つかりません: " + req.getCategoryId()));
+                    .orElseThrow(() -> new EntityNotFoundException("カテゴリが見つかりません: " + req.getCategoryId()));
             existing.setCategory(cat);
         } else {
             existing.setCategory(null);
@@ -121,12 +122,12 @@ public class TodoService {
         existing.getTags().clear();
         if (req.getTagIds() != null) {
             Set<Tag> tags = req.getTagIds().stream()
-                .map(tagId -> tagRepo.findById(tagId)
-                    .orElseThrow(() -> new EntityNotFoundException("タグが見つかりません: " + tagId)))
-                .collect(Collectors.toSet());
+                    .map(tagId -> tagRepo.findById(tagId)
+                            .orElseThrow(() -> new EntityNotFoundException("タグが見つかりません: " + tagId)))
+                    .collect(Collectors.toSet());
             existing.getTags().addAll(tags);
         }
-        Todo updated = repo.save(existing); 
+        Todo updated = repo.save(existing);
         return TodoResponse.from(updated); // Entity→DTO
     }
 
@@ -134,9 +135,9 @@ public class TodoService {
     @Transactional
     public void delete(Long id, UserDetails principal) {
         Todo t = repo.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Todo が見つかりません"));
+                .orElseThrow(() -> new EntityNotFoundException("Todo が見つかりません"));
         User user = userRepo.findByUsername(principal.getUsername())
-            .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
         if (!t.getOwner().getId().equals(user.getId())) {
             throw new AccessDeniedException("自分のタスクのみ削除できます");
         }
@@ -147,9 +148,9 @@ public class TodoService {
     @Transactional
     public TodoResponse toggleDone(Long id, UserDetails principal) {
         Todo t = repo.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Todo が見つかりません"));
+                .orElseThrow(() -> new EntityNotFoundException("Todo が見つかりません"));
         User user = userRepo.findByUsername(principal.getUsername())
-            .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
         if (!t.getOwner().getId().equals(user.getId())) {
             throw new AccessDeniedException("自分のタスクのみ操作できます");
         }
@@ -166,14 +167,7 @@ public class TodoService {
             next.setCategory(t.getCategory());
             next.setTags(new HashSet<>(t.getTags()));
             next.setDone(false);
-            // 期限日がある場合にのみ次回の期限を計算
-            if (t.getDueDate() != null) {
-                // next.setDueDate(calculateNextDueDate(t.getDueDate(), t.getRepeatType()));
-                LocalDateTime nextDue = calculateNextDueDate(t.getDueDate(), t.getRepeatType());
-                System.out.println("次回期限: " + nextDue);
-            } else {
-                System.out.println("⚠ dueDateが null のため、新タスクには期限がありません");
-            }
+            next.setDueDate(calculateNextDueDate(t.getDueDate(), t.getRepeatType()));
             repo.save(next);
         }
         return TodoResponse.from(saved);
@@ -181,11 +175,12 @@ public class TodoService {
 
     /** 繰り返しタスクの期日設定（完了フラグの切り替えメソッドで使用） */
     private LocalDateTime calculateNextDueDate(LocalDateTime current, RepeatType type) {
+        LocalDateTime base = (current != null) ? current : LocalDateTime.now();
         return switch (type) {
-            case DAILY   -> current.plusDays(1);
-            case WEEKLY  -> current.plusWeeks(1);
-            case MONTHLY -> current.plusMonths(1);
-            default      -> current;
+            case DAILY -> base.plusDays(1);
+            case WEEKLY -> base.plusWeeks(1);
+            case MONTHLY -> base.plusMonths(1);
+            default -> base;
         };
     }
 }
