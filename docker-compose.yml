@@ -1,13 +1,16 @@
 ---
 services:
   db:
-    image: mysql:8.0
+    build:
+      context: ./mysql # DB 用 Dockerfile の格納先
+      dockerfile: Dockerfile # ./mysql/Dockerfile を使う
+    image: todo-mysql:8.0
     container_name: todo-db
     restart: always
     env_file:
       - .env
     volumes:
-      - db-data:/var/lib/mysql
+      - db-data:/var/lib/mysql # DB データはボリュームに保持
     ports:
       - "3306:3306"
     healthcheck:
@@ -28,7 +31,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
+    restart: always
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}
@@ -45,6 +48,7 @@ services:
       - app
     ports:
       - "3000:80" # localhost:3000 に来たHTTP通信を、Nginxコンテナの :80 に転送
+    restart: unless-stopped
 
 # ボリュームを定義（コンテナを再起動／再ビルドしても DBデータは残る）
 volumes:

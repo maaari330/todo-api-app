@@ -25,7 +25,6 @@ import com.example.todoapi.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -160,6 +159,7 @@ public class TodoService {
 
         // もともと切り替え前が未完了で、今回の操作で「完了」になり、かつ繰り返し種別が設定されている場合に次回タスクを生成
         if (!wasDone && t.getRepeatType() != null && t.getRepeatType() != RepeatType.NONE) {
+            LocalDateTime nextDue = calculateNextDueDate(t.getDueDate(), t.getRepeatType());
             Todo next = new Todo();
             next.setTitle(t.getTitle());
             next.setOwner(t.getOwner());
@@ -167,7 +167,7 @@ public class TodoService {
             next.setCategory(t.getCategory());
             next.setTags(new HashSet<>(t.getTags()));
             next.setDone(false);
-            next.setDueDate(calculateNextDueDate(t.getDueDate(), t.getRepeatType()));
+            next.setDueDate(nextDue);
             repo.save(next);
         }
         return TodoResponse.from(saved);

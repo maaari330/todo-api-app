@@ -19,6 +19,9 @@ spring:
     hibernate:
       # テーブルが自動で作成される設定
       ddl-auto: validate
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
     properties:
       hibernate:
       dialect: org.hibernate.dialect.MySQLDialect
@@ -58,3 +61,5 @@ logging:
     '[org.springframework.http.converter.json]': DEBUG
     '[org.springframework.security]': DEBUG
     '[org.springframework.web]': DEBUG
+    '[org.hibernate.orm.jdbc.bind]': TRACE
+    '[com.example.todoapi]': INFO

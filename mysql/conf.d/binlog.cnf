@@ -1,0 +1,6 @@
+[mysqld]
+server-id=1
+log-bin=/var/lib/mysql/mysql-bin
+binlog_format=ROW
+binlog_expire_logs_seconds=259200   # 3日(72h)
+sync_binlog=1
