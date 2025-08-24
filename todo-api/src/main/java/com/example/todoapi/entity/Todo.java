@@ -46,4 +46,10 @@ public class Todo {
       inverseJoinColumns = @JoinColumn(name = "tag_id") // 相手エンティティ側の外部キー列指定
   )
   private Set<Tag> tags = new HashSet<>();
+
+  @Column(name = "remind_offset_minutes")
+  private Integer remindOffsetMinutes; // リマインド設定
+
+  @Column(name = "notified_at")
+  private LocalDateTime notifiedAt; // リマインド送信済みフラグ
 }

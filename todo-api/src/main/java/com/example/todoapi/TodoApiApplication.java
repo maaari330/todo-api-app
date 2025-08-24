@@ -3,11 +3,13 @@ package com.example.todoapi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.example.todoapi.config.JwtProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(JwtProperties.class)
+@EnableScheduling // コンテナ起動時に @Scheduled が付いたメソッドを自動発見して、バックグラウンドで定期実行
 public class TodoApiApplication {
 
 	public static void main(String[] args) {
