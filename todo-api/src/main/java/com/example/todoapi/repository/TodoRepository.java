@@ -30,19 +30,19 @@ import java.util.List;
 // JpaRepository での基本メソッドに加え、JpaSpecificationExecutor による動的検索メソッドが利用可能
 
 public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificationExecutor<Todo> {
-    // リマインド設定があるがまだ未通知のタスクで、（締切 - 現在）>= リマインド設定時間 のtodo.idを取得
-    // NotificationServiceで使用
-    @Query(value = "SELECT t.id FROM todos t " +
-            "WHERE t.due_date IS NOT NULL " +
-            "  AND t.remind_offset_minutes IS NOT NULL " +
-            "  AND t.notified_at IS NULL " +
-            "  AND TIMESTAMPDIFF(MINUTE, NOW(), t.due_date) BETWEEN 0 AND t.remind_offset_minutes", nativeQuery = true) // 今（NOW()）から締切（t.due_date）までの差分を“分”で返す
-    List<Long> findIdsDueForNotification();
+        // リマインド設定があるがまだ未通知のタスクで、（締切 - 現在）>= リマインド設定時間 のtodo.idを取得
+        // NotificationServiceで使用
+        @Query(value = "SELECT * FROM todos t " +
+                        "WHERE t.due_date IS NOT NULL " +
+                        "  AND t.remind_offset_minutes IS NOT NULL " +
+                        "  AND t.notified_at IS NULL " +
+                        "  AND TIMESTAMPDIFF(MINUTE, NOW(), t.due_date) BETWEEN 0 AND t.remind_offset_minutes", nativeQuery = true) // 今（NOW()）から締切（t.due_date）までの差分を“分”で返す
+        List<Long> findIdsDueForNotification();
 
-    // 対象IDを一括で notified_at 埋める（競合時にも安全）
-    // NotificationServiceで使用
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query(value = "UPDATE todos SET notified_at = :now " +
-            "WHERE id IN (:ids) AND notified_at IS NULL", nativeQuery = true)
-    int markNotifiedByIds(@Param("ids") List<Long> ids, @Param("now") java.time.LocalDateTime now); // 更新された行数が戻り値
+        // 対象IDを一括で notified_at 埋める（競合時にも安全）
+        // NotificationServiceで使用
+        @Modifying(clearAutomatically = true, flushAutomatically = true)
+        @Query(value = "UPDATE todos SET notified_at = :now " +
+                        "WHERE id IN (:ids) AND notified_at IS NULL", nativeQuery = true)
+        int markNotifiedByIds(@Param("ids") List<Long> ids, @Param("now") java.time.LocalDateTime now); // 更新された行数が戻り値
 }
