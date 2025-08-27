@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.example.todoapi.config.JwtProperties;
 import com.example.todoapi.entity.Role;
@@ -28,33 +29,35 @@ public class JwtTokenProvider {
     private final long expiration;
     private final UserDetailsService userDetailsService;
 
-    public JwtTokenProvider(JwtProperties properties, UserDetailsService userDetailsService) {
+    public JwtTokenProvider(JwtProperties properties,
+            @Qualifier("customUserDetailsService") UserDetailsService userDetailsService) {
         this.secretKey = Keys.hmacShaKeyFor(properties.getSecretKey().getBytes());
         this.expiration = properties.getExpiration();
         this.userDetailsService = userDetailsService;
     }
+
     // トークンを生成する
     public String generateToken(String username, Set<Role> roles) {
         Claims claims = Jwts.claims().setSubject(username);
         // JWT ペイロードとして安全に扱うために enum を文字列に変換
-        List<String> roleNames = roles.stream().map(Role::name).collect(Collectors.toList()); 
+        List<String> roleNames = roles.stream().map(Role::name).collect(Collectors.toList());
         claims.put("roles", roleNames);
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiration);
         return Jwts.builder()
                 .setClaims(claims) // ユーザー名・ロールをセット
-                .setIssuedAt(now)  // トークンの発行日時
-                .setExpiration(expiry)  // 有効期限
+                .setIssuedAt(now) // トークンの発行日時
+                .setExpiration(expiry) // 有効期限
                 .signWith(secretKey, SignatureAlgorithm.HS256) // HMAC-SHA256 で署名
-                .compact();  // コンパクト化
+                .compact(); // コンパクト化
     }
-
 
     /** 検証 */
     // １．トークンからユーザー名を取得
     public String getUsername(String token) {
         return parseClaims(token).getSubject(); // トークン生成時のserSubjectでセットした値を取得
     }
+
     // ２．トークンからロールを取得
     public Set<String> getRoles(String token) {
         Claims claims = parseClaims(token); // クレーム（Claims）：JWTペイロード部に含まれる情報（認証情報など）
@@ -64,6 +67,7 @@ public class JwtTokenProvider {
                 .map(String.class::cast)
                 .collect(Collectors.toSet());
     }
+
     // ３．トークンが有効かどうか検証
     public boolean validateToken(String token) {
         try {
@@ -73,17 +77,20 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
     // ４．トークンからAuthenticationへの変換（サーバー側の SecurityContext に保持するためjavaオブジェクト化）
     public Authentication getAuthentication(String token) {
         String username = getUsername(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username); // UserDetails からusernameをロードして Authenticationのprincipal にセット
+        // UserDetails からusernameをロードして Authenticationのprincipal にセット
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         // Authentication オブジェクトを生成
         return new UsernamePasswordAuthenticationToken(
-            userDetails,    // principal に UserDetails
-            null,        // credentials は既に検証済みなので null
-            userDetails.getAuthorities()  // 権限リスト
+                userDetails, // principal に UserDetails
+                null, // credentials は既に検証済みなので null
+                userDetails.getAuthorities() // 権限リスト
         );
     }
+
     // （共通処理：JWT の中身（クレーム）を取り出す）
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()

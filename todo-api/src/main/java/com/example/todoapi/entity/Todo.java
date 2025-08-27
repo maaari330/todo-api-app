@@ -48,7 +48,7 @@ public class Todo {
   private Set<Tag> tags = new HashSet<>();
 
   @Column(name = "remind_offset_minutes")
-  private Integer remindOffsetMinutes; // リマインド設定
+  private Integer remindOffsetMinutes; // リマインド設定（何分以内）
 
   @Column(name = "notified_at")
   private LocalDateTime notifiedAt; // リマインド送信済みフラグ
