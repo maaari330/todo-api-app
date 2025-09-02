@@ -5,7 +5,7 @@ CREATE TABLE user_roles (
   CONSTRAINT fk_user_roles_user
     FOREIGN KEY (user_id) REFERENCES users(id)
     ON DELETE CASCADE
-);
+)ENGINE=InnoDB;
 
 
 -- 必要なら複合プライマリキーを追加

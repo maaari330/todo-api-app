@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-// application.ymlのJWT関連設定値を取得
+// JWTのシークレットや有効期限を application.yml / 環境変数から自動でこのクラスのフィールドへ読み込むクラス
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "jwt")

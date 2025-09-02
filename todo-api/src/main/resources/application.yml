@@ -15,9 +15,8 @@ spring:
     password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    # Hibernate:エンティティクラス（@Entity）を定義すると、Hibernate がそのクラスとテーブルを対応づけ
     hibernate:
-      # テーブルが自動で作成される設定
+      # DBスキーマとエンティティの整合性だけ起動時に検証、HibernateでのDB作成・更新はしない
       ddl-auto: validate
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -29,15 +28,17 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
- 
   security:
     user:
       name: ${ACTUATOR_USER}
       password: ${ACTUATOR_PASSWORD}
+  task:
+    scheduling:
+      pool:
+        size: ${SCHEDULER_POOL_SIZE}
 
 springdoc:
   api-docs:
-    # （必要なら）変更可能
     path: /v3/api-docs
   swagger-ui:
     # UI の起動パス
@@ -56,6 +57,16 @@ jwt:
   secretKey: ${JWT_SECRETKEY}
   expiration: ${JWT_EXPIRATION}
 
+# 通知ジョブ設定
+notify:
+  scan-ms: ${NOTIFY_SCAN_MS}
+
+# VAPID（Web Push）の設定
+vapid:
+  publicKey: ${VAPID_PUBLIC_KEY} 
+  privateKey: ${VAPID_PRIVATE_KEY}
+  subject: ${VAPID_SUBJECT} 
+
 logging:
   level:
     '[org.springframework.http.converter.json]': DEBUG
@@ -63,3 +74,6 @@ logging:
     '[org.springframework.web]': DEBUG
     '[org.hibernate.orm.jdbc.bind]': TRACE
     '[com.example.todoapi]': INFO
+    '[com.example.todoapi.notification]': INFO
+    '[com.example.todoapi.push]': INFO
+    '[nl.martijndwars.webpush]': WARN

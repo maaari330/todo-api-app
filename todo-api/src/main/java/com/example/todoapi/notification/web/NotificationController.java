@@ -1,25 +1,38 @@
 package com.example.todoapi.notification.web;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.example.todoapi.notification.service.NotificationService;
-import com.example.todoapi.service.CustomUserDetailsService;
+import com.example.todoapi.service.CustomUserDetailsService.LoginUser;
 
 import lombok.RequiredArgsConstructor;
-import java.util.List;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * 通知ドメインサービス：通知対象の検出・状態更新・in-app 用ページング取得など通知ロジックの中核
+ * アプリ内通知はユーザーがサイト画面を見てるときに最新通知を表示するため、ユーザーが見る時にこのクラスをPullする
+ */
 @RestController
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationService notificationService;
 
-    /** 直近10分での通知済みの通知を最大5件（ユーザー別／DB参照） */
+    /** ログインユーザーのアプリ内通知を、afterIso 以降（未指定時は直近 minutesFallback 分）からページング取得して返す */
     @GetMapping("/in-app/recent")
     public List<NotificationService.InAppMessage> recent(
-            @AuthenticationPrincipal CustomUserDetailsService.LoginUser user) {
-        return notificationService.recentByUser(user.getId(), 10, 5);
+            @AuthenticationPrincipal LoginUser user,
+            @RequestParam(defaultValue = "0") int page, // 0始まりのページ番号
+            @RequestParam(defaultValue = "20") int size, // ← 1ページの件数、デフォルト20件
+            @RequestParam(required = false) String afterIso, // ← フロントが「最後に見た時刻」（ISO形式）を送れる口
+            @RequestParam(required = false, defaultValue = "60") int minutesFallback // after が無いときの保険、「遡る幅」
+    ) {
+        final LocalDateTime since = (afterIso != null && !afterIso.isBlank())
+                ? LocalDateTime.parse(afterIso) // 例: "2025-08-27T11:22:33"
+                : LocalDateTime.now().minusMinutes(minutesFallback);
+        var paged = notificationService.findRecentByUserPaged(user.getId(), since, page, size);
+        return paged.content(); // InAppMessage のリストを返す
     }
 }

@@ -35,14 +35,18 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificationExecutor<Todo> {
         /** 通知関連メソッド3つ */
-        // 1) 対象IDだけを軽く抽出：リマインド設定があるがまだ未通知のタスクで、（締切 - 現在）>= リマインド設定時間 のtodo.idを取得
-        @Query(value = "SELECT * FROM todos t " +
-                        "WHERE t.due_date IS NOT NULL " +
-                        "  AND t.remind_offset_minutes IS NOT NULL " +
-                        "  AND t.notified_at IS NULL " +
-                        "  AND TIMESTAMPDIFF(MINUTE, NOW(), t.due_date) BETWEEN 0 AND t.remind_offset_minutes", nativeQuery = true)
-        // 0 <= (t.due_date - NOW()) <= remind_offset_minutes つまり締切から○分以内にリマインド
-        // の設定をしたremind_offset_minutesを過ぎたら対象になる
+        // 1) 対象IDだけを軽く抽出
+        @Query(value = """
+                        SELECT t.id FROM todos t
+                        WHERE t.due_date IS NOT NULL
+                                AND t.remind_offset_minutes IS NOT NULL
+                                AND t.notified_at IS NULL
+                                -- “remind_offset_minutes を過ぎたら”対象（due_date <= now + remind_offset_minutes）
+                                -- すでに締切が過ぎたものも対象
+                                AND t.due_date <= DATE_ADD(NOW(6), INTERVAL t.remind_offset_minutes MINUTE)
+                        ORDER BY t.due_date ASC
+                        LIMIT 500
+                        """, nativeQuery = true)
         List<Long> findIdsDueForNotification();
 
         // 2) 一括で既読化：対象IDを一括で notified_at 埋める（競合時にも安全）
@@ -51,7 +55,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificat
                         "WHERE id IN (:ids) AND notified_at IS NULL", nativeQuery = true)
         int markNotifiedByIds(@Param("ids") List<Long> ids, @Param("now") java.time.LocalDateTime now); // 更新された行数が戻り値
 
-        // 3) ユーザー別に、直近N分の「2で通知済み（notified_at IS NOT NULL）にした」通知を新しい順で取得
+        // 3) ユーザー別に、最後のアクセス以降の通知を新しい順で取得
         @Query(value = """
                         SELECT * FROM todos t
                         WHERE t.user_id = :userId
