@@ -1,7 +1,6 @@
 package com.example.todoapi.notification.service;
 
 import com.example.todoapi.repository.TodoRepository;
-import com.example.todoapi.notification.service.NotificationService;
 import com.example.todoapi.entity.Todo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
