@@ -25,6 +25,7 @@ public class NotificationJob {
         for (var t : targets) { // 通知対象の検出
             webPushSender.sendToUser(
                     t.getOwner().getId(),
+                    t.getId(),
                     "まもなく期限",
                     "「" + t.getTitle() + "」が近づいています",
                     "/app/todos/" + t.getId());

@@ -10,6 +10,7 @@ import SignupPage from './pages/SignupPage';
 import CategoryPage from './pages/CategoryPage';
 import TagPage from './pages/TagPage';
 import CalendarPage from './pages/CalendarPage';
+import Settings from './pages/Settings';
 
 // AppWithAuth 以下どこからでも認証状態を AuthContext で参照できる
 export default function App() {
@@ -35,17 +36,19 @@ function AppWithAuth() {
           <Routes>
             {/* デフォルトはログイン or Todo にリダイレクト */}
             <Route path="/" element={<Navigate to={user ? "/todos" : "/login"} replace />} />
+            {/* パブリック */}
             {/* ログイン画面 */}
             <Route path="/login" element={user ? <Navigate to="/todos" replace /> : <LoginPage />} />
             {/* サインアップ画面 */}
             <Route path="/signup" element={user ? <Navigate to="/todos" replace /> : <SignupPage />} />
 
             {/* プライベートルート */}
-            {/* Todo一覧、カテゴリ一覧、タグ一覧ページ */}
+            {/* Todo一覧、カテゴリ一覧、タグ一覧、設定一覧ページ */}
             <Route path="/todos" element={user ? <TodosPage /> : <Navigate to="/login" replace />} />
             <Route path="/categories" element={user ? <CategoryPage /> : <Navigate to="/login" replace />} />
             <Route path="/tags" element={user ? <TagPage /> : <Navigate to="/login" replace />} />
             <Route path="/calendar" element={user ? <CalendarPage /> : <Navigate to="/login" replace />} />
+            <Route path="/settings" element={user ? <Settings /> : <Navigate to="/login" replace />} />
             {/* 存在しないパスはホームへ */}
             <Route path="*" element={<Navigate to={user ? "/todos" : "/login"} replace />} />
           </Routes>
