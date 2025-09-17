@@ -36,7 +36,8 @@ public class NotificationService {
     public Paged<InAppMessage> findRecentByUserPaged(Long userId, LocalDateTime since, int page, int size) {
         var pageable = org.springframework.data.domain.PageRequest.of(page, size);
         var slice = todoRepository.findRecentNotifiedByUser(userId, since, pageable);
-        var content = slice.getContent().stream().map(NotificationService::toMessage).toList(); // Todo を画面用DTOに変換
+        var content = slice.getContent().stream().map(NotificationService::toMessage).toList();
+        // Todo を画面用DTOに toMessageを使って変換
         return new Paged<>(content, slice.hasNext()); // アイテム本体(InAppMessage) + まだ次があるかの2点だけを返す
     }
 
@@ -70,9 +71,9 @@ public class NotificationService {
         String body = (t.getDueDate() != null) // 期限
                 ? "期限: " + t.getDueDate().toString().replace('T', ' ')
                 : "期限未設定";
-        String url = "/todos/" + id; // /todosのUI画面ルーティング
+        String url = "/todos?open=" + id; // /todos一覧内のタスクを開くルーティング
         Instant createdAt = (t.getNotifiedAt() != null) // 通知打刻
-                ? t.getNotifiedAt().atZone(APP_ZONE).toInstant()
+                ? t.getNotifiedAt().atZone(APP_ZONE).toInstant() // ローカル時刻→（地域適用）→UTC(Instant) の瞬間へ
                 : Instant.now();
         return new InAppMessage(id, title, body, url, createdAt);
     }

@@ -1,6 +1,7 @@
 import { useLocation, NavLink } from 'react-router-dom';
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import HeaderBell from './HeaderBell';
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
@@ -53,6 +54,9 @@ export default function Header() {
 
           {/* 区切り */}
           <span className="border-l h-6 mx-2"></span>
+
+          {/* App内通知ポップアップ表示 */}
+          <HeaderBell />
 
           {/* ログアウトボタン */}
           <button onClick={logout} className="text-sm text-red-500 hover:underline" >
