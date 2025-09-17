@@ -176,6 +176,13 @@
 				<configuration>
 					<source>17</source>  <!-- あなたのJavaバージョンに応じて変更 -->
 					<target>17</target>  <!-- あなたのJavaバージョンに応じて変更 -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.34</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>

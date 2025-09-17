@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /** 通知の業務ロジック集約（通知対象取得・送信後の打刻・履歴取得など） */
 @Service
@@ -44,27 +46,38 @@ public class NotificationService {
     }
 
     /* 3)で使用：アプリ内通知表示用の不変 DTO */
-    public record InAppMessage(Long todoId, String text, LocalDateTime dueDate, LocalDateTime notifiedAt) {
+    public record InAppMessage(Long todoId, String title, String body, String url, Instant createdAt) {
         /**
          * DBから取った Todo を Service で整形した DTO
          * - エンティティ（Todo）を直接返さず、必要な項目に限定して漏洩を防ぐ
          * 
          * 【record により自動生成されるもの】
-         * - private final フィールド：todoId, text, dueDate, notifiedAt
-         * - コンストラクタ： public InAppMessage(Long todoId, String text, LocalDateTime
-         * dueDate,LocalDateTime notifiedAt)
-         * - アクセサ（ゲッター相当・名前はフィールド名そのまま）：todoId(), text(), dueDate(), notifiedAt()
+         * - private final フィールド：各引数ごと
+         * - コンストラクタ： public InAppMessage(Long todoId, String title, String body, String
+         * url, Instant createdAt)
+         * - アクセサ（ゲッター相当・名前はフィールド名そのまま）：todoId(), title(), body(), url(), createdAt()
          * - equals()/hashCode()：全コンポーネントを基に生成
          * - toString()
          */
     }
 
     /* 3)で使用：Todo → InAppMessage 変換 */
+    private static final ZoneId APP_ZONE = ZoneId.of("Asia/Tokyo");
+
     private static InAppMessage toMessage(Todo t) {
-        return new InAppMessage(
-                t.getId(),
-                "まもなく期限：「" + t.getTitle() + "」",
-                t.getDueDate(),
-                t.getNotifiedAt());
+        Long id = t.getId();
+        String title = "まもなく期限：「" + nullSafe(t.getTitle()) + "」";
+        String body = (t.getDueDate() != null) // 期限
+                ? "期限: " + t.getDueDate().toString().replace('T', ' ')
+                : "期限未設定";
+        String url = "/todos/" + id; // /todosのUI画面ルーティング
+        Instant createdAt = (t.getNotifiedAt() != null) // 通知打刻
+                ? t.getNotifiedAt().atZone(APP_ZONE).toInstant()
+                : Instant.now();
+        return new InAppMessage(id, title, body, url, createdAt);
+    }
+
+    private static String nullSafe(String s) {
+        return s != null ? s : "";
     }
 }
