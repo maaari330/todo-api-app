@@ -1,8 +1,8 @@
 /** フロント側での Service Worker の登録
  * バックエンドの /push/subscribe に購読情報の送信 */
 
-// Vite のビルド時に公開鍵を注入
-const VAPID_KEY_FROM_ENV = (import.meta as any).env?.VITE_VAPID_PUBLIC_KEY as string | undefined; // もしくはサーバからGET
+// React のビルド時に公開鍵を注入
+const VAPID_KEY_FROM_ENV = (import.meta as any).env?.REACT_APP_VAPID_PUBLIC_KEY as string | undefined; // もしくはサーバからGET
 
 /** Base64URL ⇄ バイナリ変換ユーティリティ */
 // 1) VAPID 公開鍵（Base64URL）を Uint8Array（バイト配列）に変換する関数
@@ -33,7 +33,7 @@ export async function enablePush() {
 
     // 3) Push 購読の作成（VAPID鍵が必要）
     const vapid = VAPID_KEY_FROM_ENV?.trim();
-    if (!vapid) throw new Error('VITE_VAPID_PUBLIC_KEY が未設定です（todo-frontend/.env に設定してね）');
+    if (!vapid) throw new Error('REACT_APP_VAPID_PUBLIC_KEY が未設定です（todo-frontend/.env に設定してね）');
     // ブラウザ側の購読登録
     const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
