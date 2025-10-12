@@ -1,8 +1,10 @@
+import api from './utils/axiosConfig';
+
 /** フロント側での Service Worker の登録
  * バックエンドの /push/subscribe に購読情報の送信 */
 
 // React のビルド時に公開鍵を注入
-const VAPID_KEY_FROM_ENV = (import.meta as any).env?.REACT_APP_VAPID_PUBLIC_KEY as string | undefined; // もしくはサーバからGET
+const VAPID_PUBLIC_KEY = (process.env.REACT_APP_VAPID_PUBLIC_KEY || '').trim();
 
 /** Base64URL ⇄ バイナリ変換ユーティリティ */
 // 1) VAPID 公開鍵（Base64URL）を Uint8Array（バイト配列）に変換する関数
@@ -32,12 +34,13 @@ export async function enablePush() {
     if (perm !== 'granted') throw new Error('通知が許可されていません');
 
     // 3) Push 購読の作成（VAPID鍵が必要）
-    const vapid = VAPID_KEY_FROM_ENV?.trim();
-    if (!vapid) throw new Error('REACT_APP_VAPID_PUBLIC_KEY が未設定です（todo-frontend/.env に設定してね）');
+    if (!VAPID_PUBLIC_KEY) {
+        throw new Error('REACT_APP_VAPID_PUBLIC_KEY が未設定です（todo-frontend/.env に設定）');
+    }
     // ブラウザ側の購読登録
     const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapid),
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     }); // pushManager.subscribe：ブラウザに「このオリジンでプッシュを受け取る購読を作って」と頼む
     // sub：購読を表すオブジェクトが返る（endpoint, getKey('p256dh'), getKey('auth'), unsubscribe()など）
 
@@ -49,7 +52,7 @@ export async function enablePush() {
             auth: bufToBase64Url(sub.getKey('auth')!),
         },
     };
-    await fetch('/push/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    await api.post('/push/subscribe', body);
 }
 
 
@@ -68,7 +71,7 @@ export async function disablePush() {
         },
     };
     // サーバ側の購読解除
-    await fetch('/push/unsubscribe', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    await api.delete('/push/unsubscribe', { data: body });
     // ブラウザ側の購読解除
     await sub.unsubscribe();
 }

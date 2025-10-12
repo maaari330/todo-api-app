@@ -4,7 +4,7 @@ import api from '../utils/axiosConfig';
  * タグ一覧取得／作成／更新／削除を扱うサービス層
  */
 export const categoryService = {
-   /** 一覧取得 */
+  /** 一覧取得 */
   list: async () => {
     const res = await api.get('/categories');
     return res.data;

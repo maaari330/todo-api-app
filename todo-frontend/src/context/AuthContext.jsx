@@ -11,7 +11,7 @@ import { authService } from '../services/authService';
  * logout: ログアウト実行関数
  * signup: 新規ユーザー登録実行関数
 */
-export const AuthContext = createContext({ user: null, loading: true, login: async () => {}, logout: () => {}, signup: async () => {} });
+export const AuthContext = createContext({ user: null, loading: true, login: async () => { }, logout: () => { }, signup: async () => { } });
 
 // AuthContextの中身を実際に提供
 export function AuthProvider({ children }) {
@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
     // レスポンス全体を取得
     const response = await api.post('/auth/login', { username, password });
     // 正しいキー名を使って分解
-    const { accessToken , tokenType } = response.data;
+    const { accessToken, tokenType } = response.data;
     if (!accessToken) {
       throw new Error("ログインレスポンスにaccessTokenが含まれていません");
     }
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     // axios デフォルトヘッダーにセット
     api.defaults.headers.common.Authorization = `${tokenType} ${accessToken}`;
     // /auth/me でユーザー情報を取得
-    const me = await await authService.me()
+    const { data: me } = await authService.me()
     setUser(me);
     return me;
   };

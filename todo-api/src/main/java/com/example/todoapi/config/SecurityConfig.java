@@ -89,7 +89,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // ─── 認証必須 ─────────────────────────────
                         .requestMatchers("/auth/logout").authenticated()
-                        .requestMatchers("/auth/me", "/notifications/**").authenticated()
+                        .requestMatchers("/auth/me", "/notifications/**", "/push/**").authenticated()
                         .requestMatchers("/actuator/**", "/todos/**", "/categories/**", "/tags/**").authenticated()
                         // ─── その他 ───────────────────────────────
                         .anyRequest().denyAll())

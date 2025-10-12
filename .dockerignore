@@ -38,3 +38,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# don't ignore front .env
+!todo-frontend/.env

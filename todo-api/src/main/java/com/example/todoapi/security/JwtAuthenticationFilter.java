@@ -18,12 +18,14 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.lang.NonNull;
 import org.springframework.http.HttpHeaders;
 
-
-/**  毎リクエストでSpring Security のフィルターとして JWT の検証と
-Spring Security（Security Config） に認証情報を渡す「フィルター」*/
+/**
+ * 毎リクエストでSpring Security のフィルターとして JWT の検証と
+ * Spring Security（Security Config） に認証情報を渡す「フィルター」
+ */
 @Component
 @AllArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter { // OncePerRequestFilterでは shouldNotFilter() → doFilterInternal()の順で呼ぶ 
+public class JwtAuthenticationFilter extends OncePerRequestFilter { // OncePerRequestFilterでは shouldNotFilter() →
+                                                                    // doFilterInternal()の順で呼ぶ
     private final JwtTokenProvider tokenProvider;
 
     // これらのパスでは doFilterInternal をスキップする
@@ -31,27 +33,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // OncePerRe
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getServletPath();
         return "/auth/signup".equals(path)
-            || "/auth/login".equals(path) // login成功して初めてJWTトークンが発行されるため、トークン検証（doFilterInternal）は対象外
-            || "/error".equals(path);
+                || "/auth/login".equals(path) // login成功して初めてJWTトークンが発行されるため、トークン検証（doFilterInternal）は対象外
+                || "/error".equals(path);
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest req, @NonNull HttpServletResponse res, @NonNull FilterChain chain) // HttpServletRequest:クライアントから送られてきた HTTP リクエスト情報を表現
+    protected void doFilterInternal(@NonNull HttpServletRequest req, @NonNull HttpServletResponse res,
+            @NonNull FilterChain chain) // HttpServletRequest:クライアントから送られてきた HTTP リクエスト情報を表現
             throws ServletException, IOException {
         // 1) Authorization ヘッダーを優先して取得
         String header = req.getHeader(HttpHeaders.AUTHORIZATION);
         String token = (header != null && header.startsWith("Bearer "))
-                   ? header.substring(7)
-                   : null;
-        /**  2) トークンがあれば検証し、問題なければ認証情報をセット
-         * SecurityContext に登録 → コントローラ／サービス層で @AuthenticationPrincipal UserDetails によって利用 */
+                ? header.substring(7)
+                : null;
+
+        /**
+         * 2) トークンがあれば検証し、問題なければ認証情報をセット
+         * SecurityContext に登録 → コントローラ／サービス層で @AuthenticationPrincipal UserDetails
+         * によって利用
+         */
         if (token != null) {
             try {
                 if (tokenProvider.validateToken(token)) {
                     Authentication auth = tokenProvider.getAuthentication(token);
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
-            // トークンが無効、またはユーザー不在なら例外をキャッチ
+                // トークンが無効、またはユーザー不在なら例外をキャッチ
             } catch (JwtException | UsernameNotFoundException ex) {
                 logger.debug("Invalid JWT, skipping authentication: " + ex.getMessage());
                 SecurityContextHolder.clearContext(); // SecurityContext はクリア（＝未認証状態のまま）→ 未認証ユーザー扱い
