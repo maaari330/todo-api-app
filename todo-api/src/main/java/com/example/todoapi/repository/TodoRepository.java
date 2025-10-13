@@ -38,12 +38,13 @@ public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificat
         // 1) 対象IDだけを軽く抽出
         @Query(value = """
                         SELECT t.id FROM todos t
-                        WHERE t.due_date IS NOT NULL
+                        WHERE  t.done = 0
+                                AND t.due_date IS NOT NULL
                                 AND t.remind_offset_minutes IS NOT NULL
                                 AND t.notified_at IS NULL
                                 -- “remind_offset_minutes を過ぎたら”対象（due_date <= now + remind_offset_minutes）
                                 -- すでに締切が過ぎたものも対象
-                                AND t.due_date <= DATE_ADD(NOW(6), INTERVAL t.remind_offset_minutes MINUTE)
+                                AND DATE_SUB(t.due_date, INTERVAL t.remind_offset_minutes MINUTE) <= NOW(6)
                         ORDER BY t.due_date ASC
                         LIMIT 500
                         """, nativeQuery = true)
@@ -55,7 +56,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificat
                         "WHERE id IN (:ids) AND notified_at IS NULL", nativeQuery = true)
         int markNotifiedByIds(@Param("ids") List<Long> ids, @Param("now") java.time.LocalDateTime now); // 更新された行数が戻り値
 
-        // 3) ユーザー別に、最後のアクセス以降の通知を新しい順で取得
+        // 3) ユーザー別の通知履歴、最後のアクセス以降の通知を新しい順で取得
         @Query(value = """
                         SELECT * FROM todos t
                         WHERE t.user_id = :userId

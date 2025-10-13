@@ -29,9 +29,12 @@ CREATE TABLE tag (
 -- Todos（repeat_type は V2 で追加するのでここでは入れない）
 CREATE TABLE todos (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255),
-  done BIT(1) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  done TINYINT(1) NOT NULL,
   due_date DATETIME(6),
+  remind_offset_minutes INT NULL, 
+  notified_at DATETIME(6) NULL, 
+  repeat_type VARCHAR(50) NOT NULL DEFAULT 'NONE',
   category_id BIGINT,
   user_id BIGINT NOT NULL,
   CONSTRAINT fk_todos_user FOREIGN KEY (user_id) REFERENCES users(id),
@@ -49,4 +52,19 @@ CREATE TABLE todo_tag (
   PRIMARY KEY (todo_id, tag_id),
   CONSTRAINT fk_todotag_todo FOREIGN KEY (todo_id) REFERENCES todos(id),
   CONSTRAINT fk_todotag_tag  FOREIGN KEY (tag_id)  REFERENCES tag(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Push 購読（Web Push）
+CREATE TABLE push_subscriptions (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  endpoint VARCHAR(500) NOT NULL,
+  p256dh  VARCHAR(255) NOT NULL,
+  auth    VARCHAR(255) NOT NULL,
+  user_agent VARCHAR(255),
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  CONSTRAINT uq_push_endpoint UNIQUE (endpoint),
+  CONSTRAINT fk_push_subscription_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
