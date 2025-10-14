@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
   // 2) ログイン関数
   const login = async (username, password) => {
     // レスポンス全体を取得
-    const response = await api.post('/auth/login', { username, password });
+    const response = await api.post('/auth/login', { username, password }, { skipAuth: true });
     // 正しいキー名を使って分解
     const { accessToken, tokenType } = response.data;
     if (!accessToken) {
@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
     // localStorage に保存
     localStorage.setItem('token', accessToken);
     // axios デフォルトヘッダーにセット
-    api.defaults.headers.common.Authorization = `${tokenType} ${accessToken}`;
+    api.defaults.headers.common['Authorization'] = `${tokenType} ${accessToken}`;
     // /auth/me でユーザー情報を取得
     const { data: me } = await authService.me()
     setUser(me);

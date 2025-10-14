@@ -64,6 +64,8 @@ export async function disablePush() {
     if (!sub) return;
 
     const body = {
+
+        
         endpoint: sub.endpoint,
         keys: {
             p256dh: bufToBase64Url(sub.getKey('p256dh')!),
