@@ -15,10 +15,16 @@ public class PushSubscriptionService {
     /* 購読情報をリポジトリに保存 */
     @Transactional
     public void save(Long userId, String endpoint, String p256dh, String auth, String userAgent) {
-        // 既存（同一endpoint）の重複を避ける
+        // 既存があっても必ず更新
         var existing = repo.findByUserIdAndEndpoint(userId, endpoint);
-        if (existing.isPresent())
+        if (existing.isPresent()) {
+            var s = existing.get();
+            s.setP256dh(p256dh);
+            s.setAuth(auth);
+            s.setUserAgent(userAgent);
+            repo.save(s);
             return;
+        }
 
         var s = new PushSubscription();
         s.setUserId(userId);

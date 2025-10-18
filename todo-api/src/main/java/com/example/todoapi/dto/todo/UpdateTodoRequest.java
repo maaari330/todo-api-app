@@ -25,6 +25,9 @@ public class UpdateTodoRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dueDate;
 
+    @Schema(description = "期限の何分前に通知するか（nullなら通知なし）", example = "60")
+    private Integer remindOffsetMinutes;
+
     @Schema(description = "繰り返し種別 (NONE, DAILY, WEEKLY, MONTHLY)", example = "DAILY")
     private RepeatType repeatType = RepeatType.NONE;
 

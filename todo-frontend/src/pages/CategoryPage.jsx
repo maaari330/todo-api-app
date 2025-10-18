@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useCategories }    from '../hooks/useCategories';
+import { useCategories } from '../hooks/useCategories';
+import { Trash2, Pencil } from "lucide-react";
 
 /** カテゴリの新規作成・更新・削除を行うページ（コンポーネント層） */
 export default function CategoryPage() {
-  const [newName, setNewName]   = useState('');     // 新規作成用入力
+  const [newName, setNewName] = useState('');     // 新規作成用入力
   // useCategories から取得 ＆ useCategories が最初の fetch を行い、カテゴリ一覧を取得
   const {
     categories,  // カテゴリ一覧データ
@@ -31,13 +32,11 @@ export default function CategoryPage() {
 
   // ─── 3) 削除 ─────────────────────────────────
   const handleDelete = async (id) => {
-    if (!window.confirm('本当にこのカテゴリを削除しますか？')) { // ブラウザ組み込みのモーダルダイアログを表示
-      await remove(id);
-    }
+    await remove(id);
   };
 
   if (loading) return <p>読み込み中…</p>;
-  if (error)   return <p className="text-red-600">エラー: {error.message}</p>;
+  if (error) return <p className="text-red-600">エラー: {error.message}</p>;
 
   return (
     <div className="max-w-lg mx-auto mt-8 p-4 bg-white shadow rounded">
@@ -49,15 +48,15 @@ export default function CategoryPage() {
             <div className="space-x-2">
               <button
                 onClick={() => handleUpdate(c.id, c.name)}
-                className="px-2 py-1 bg-yellow-300 rounded"
+                className="inline-flex items-center justify-center rounded p-2 bg-yellow-300 text-white hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:bg-yellow-200 focus:ring-offset-2"
               >
-                編集
+                <Pencil className="h-5 w-5" />
               </button>
               <button
-                onClick={() => handleDelete(c.id)}
-                className="px-2 py-1 bg-red-400 text-white rounded"
+                onClick={() => { handleDelete(c.id); }}
+                className="inline-flex items-center justify-center rounded p-2 bg-red-500 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
               >
-                削除
+                <Trash2 className="h-5 w-5" />
               </button>
             </div>
           </li>

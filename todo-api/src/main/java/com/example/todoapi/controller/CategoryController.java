@@ -33,7 +33,7 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "カテゴリ一覧の取得", description = "すべてのカテゴリを取得します")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "カテゴリ一覧取得成功", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Tag.class))))
+            @ApiResponse(responseCode = "200", description = "カテゴリ一覧取得成功", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Tag.class))))
     })
     public ResponseEntity<List<CategoryResponse>> list() {
         return ResponseEntity.ok(service.findAll());
@@ -42,8 +42,8 @@ public class CategoryController {
     @GetMapping("/{id}")
     @Operation(summary = "カテゴリの取得", description = "ID を指定してカテゴリを取得します")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "カテゴリ取得成功", content = @Content(schema = @Schema(implementation = Tag.class))),
-        @ApiResponse(responseCode = "404", description = "カテゴリが見つかりません", content = @Content)
+            @ApiResponse(responseCode = "200", description = "カテゴリ取得成功", content = @Content(schema = @Schema(implementation = Tag.class))),
+            @ApiResponse(responseCode = "404", description = "カテゴリが見つかりません", content = @Content)
     })
     public ResponseEntity<CategoryResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
@@ -53,8 +53,8 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "カテゴリの作成", description = "新しいカテゴリを作成します")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "カテゴリ作成成功"),
-        @ApiResponse(responseCode = "400", description = "入力エラー")
+            @ApiResponse(responseCode = "201", description = "カテゴリ作成成功"),
+            @ApiResponse(responseCode = "400", description = "入力エラー")
     })
     public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CreateCategoryRequest req) {
         CategoryResponse res = service.create(req);
@@ -64,11 +64,12 @@ public class CategoryController {
     @PutMapping("/{id}")
     @Operation(summary = "カテゴリの更新", description = "指定した ID のカテゴリを更新します")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "カテゴリ更新成功", content = @Content(schema = @Schema(implementation = Tag.class))),
-        @ApiResponse(responseCode = "404", description = "カテゴリが見つかりません", content = @Content),
-        @ApiResponse(responseCode = "404", description = "指定 ID のカテゴリが存在しない")
+            @ApiResponse(responseCode = "200", description = "カテゴリ更新成功", content = @Content(schema = @Schema(implementation = Tag.class))),
+            @ApiResponse(responseCode = "404", description = "カテゴリが見つかりません", content = @Content),
+            @ApiResponse(responseCode = "404", description = "指定 ID のカテゴリが存在しない")
     })
-    public ResponseEntity<CategoryResponse> update(@PathVariable Long id, @Valid @RequestBody UpdateCategoryRequest req) {
+    public ResponseEntity<CategoryResponse> update(@PathVariable Long id,
+            @Valid @RequestBody UpdateCategoryRequest req) {
         return ResponseEntity.ok(service.update(id, req));
     }
 
@@ -76,8 +77,9 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "カテゴリの削除", description = "指定した ID のカテゴリを削除します")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "カテゴリ削除成功", content = @Content),
-        @ApiResponse(responseCode = "404", description = "カテゴリが見つかりません", content = @Content)
+            @ApiResponse(responseCode = "204", description = "カテゴリ削除成功", content = @Content),
+            @ApiResponse(responseCode = "404", description = "カテゴリが見つかりません", content = @Content),
+            @ApiResponse(responseCode = "409", description = "カテゴリに紐づくタスクが残っており削除不可", content = @Content)
     })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

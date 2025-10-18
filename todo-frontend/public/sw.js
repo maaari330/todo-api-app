@@ -6,8 +6,19 @@
  * WebPushSender.java（バックエンド）からjsonを受領したら実行される
  * */
 
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+
 // 1) プッシュ通知
 globalThis.addEventListener('push', (event) => {
+    console.log('[SW] push event:', event); // ★追加
+    let raw = '';
+    try { raw = event.data ? event.data.text() : ''; } catch { }
+    // ページへも通知（通常のConsoleで見える）
+    event.waitUntil((async () => {
+        const clients = await globalThis.clients.matchAll({ type: 'window', includeUncontrolled: true });
+        for (const c of clients) c.postMessage({ type: 'PUSH_DEBUG', raw });
+    })());
     const data = (() => {
         try { return event.data?.json() || {}; } catch { return {}; }
     })(); // サーバが WebPushSender.java で送ったペイロード（JSON）を受け取る

@@ -27,8 +27,8 @@ export function AuthProvider({ children }) {
     }
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
     authService.me()
-      .then(res => setUser(res.data))
-      .catch(() => setUser(null))
+      .then(res => setUser(res))
+      .catch(() => { localStorage.removeItem('token'); setUser(null); })
       .finally(() => setLoading(false));
   }, []);
 
@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     // axios デフォルトヘッダーにセット
     api.defaults.headers.common['Authorization'] = `${tokenType} ${accessToken}`;
     // /auth/me でユーザー情報を取得
-    const { data: me } = await authService.me()
+    const me = await authService.me()
     setUser(me);
     return me;
   };

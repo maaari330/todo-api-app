@@ -21,30 +21,40 @@ function bufToBase64Url(buf: ArrayBuffer) {
     return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-
-/** Push を有効化するメイン関数 */
-export async function enablePush() {
+/** 追加：現在の SW 登録を取得（なければ register）→ 現在の購読を返す（なければ作成） */
+async function getOrCreateSubscription(): Promise<PushSubscription> {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         throw new Error('Push未対応のブラウザです');
     }
-    // 1) Service Worker登録
-    const reg = await navigator.serviceWorker.register('/sw.js');
-    // 2) 通知許可をポップアップで確認
-    const perm = await Notification.requestPermission(); //　例：「このサイトからの通知を許可しますか？」
+    if (!VAPID_PUBLIC_KEY) {
+        throw new Error('REACT_APP_VAPID_PUBLIC_KEY が未設定です（.env を確認）');
+    }
+
+    // 既存の登録を使う。なければ register（←毎回 register し直さない）
+    const reg =
+        (await navigator.serviceWorker.getRegistration()) ??
+        (await navigator.serviceWorker.register('/sw.js'));
+
+    // 権限確認（未許可ならここで終了）
+    const perm = await Notification.requestPermission();
     if (perm !== 'granted') throw new Error('通知が許可されていません');
 
-    // 3) Push 購読の作成（VAPID鍵が必要）
-    if (!VAPID_PUBLIC_KEY) {
-        throw new Error('REACT_APP_VAPID_PUBLIC_KEY が未設定です（todo-frontend/.env に設定）');
-    }
-    // ブラウザ側の購読登録
-    const sub = await reg.pushManager.subscribe({
+    // 既存購読があればそのまま使う（＝endpoint が変わらない限り再購読しない）
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return existing;
+
+    // なければ新規購読を作る
+    return reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-    }); // pushManager.subscribe：ブラウザに「このオリジンでプッシュを受け取る購読を作って」と頼む
-    // sub：購読を表すオブジェクトが返る（endpoint, getKey('p256dh'), getKey('auth'), unsubscribe()など）
+    });
+}
 
-    // 4) サーバへ購読登録
+/** ここを呼べば“いまの購読 endpoint”が必ずサーバに登録される（＝DBとブラウザの宛先が一致） */
+export async function enablePush() {
+    const sub = await getOrCreateSubscription();
+
+    // サーバが期待する形（既存と同じ：keys 配下に p256dh/auth）
     const body = {
         endpoint: sub.endpoint,
         keys: {
@@ -52,28 +62,31 @@ export async function enablePush() {
             auth: bufToBase64Url(sub.getKey('auth')!),
         },
     };
+
+    // ★重要：ログイン後などアプリ起動時に毎回 upsert 送る
+    //  └ 端末/プロファイル変更や SW 再購読で endpoint が変わっても、DBが最新に追随できる
     await api.post('/push/subscribe', body);
+    const reg = (await navigator.serviceWorker.getRegistration())
+        ?? (await navigator.serviceWorker.register('/sw.js'));
+    console.log('[SW] register done. scope=', reg.scope);
+    console.log('[push] registered endpoint:', sub.endpoint);
 }
 
-
-/** Push を無効化（購読解除） */
+/** 購読解除（サーバから削除 → ブラウザ側も解除） */
 export async function disablePush() {
-    // 既存のService Worker登録/ Push購読を取得
     const reg = await navigator.serviceWorker.getRegistration();
     const sub = await reg?.pushManager.getSubscription();
     if (!sub) return;
 
     const body = {
-
-        
         endpoint: sub.endpoint,
         keys: {
             p256dh: bufToBase64Url(sub.getKey('p256dh')!),
             auth: bufToBase64Url(sub.getKey('auth')!),
         },
     };
-    // サーバ側の購読解除
+
     await api.delete('/push/unsubscribe', { data: body });
-    // ブラウザ側の購読解除
     await sub.unsubscribe();
+    console.log('[push] unregistered endpoint:', sub.endpoint);
 }

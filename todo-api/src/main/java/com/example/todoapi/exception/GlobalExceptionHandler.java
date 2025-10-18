@@ -1,5 +1,6 @@
 package com.example.todoapi.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.todoapi.dto.ErrorResponse;
 
@@ -22,11 +24,11 @@ public class GlobalExceptionHandler {
 
     /** バリデーションエラー (400) */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation( MethodArgumentNotValidException ex, HttpServletRequest req) {
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
         // フィールドごとのエラーメッセージを "field: message" の形で連結
         String details = ex.getBindingResult().getFieldErrors().stream()
-            .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
-            .collect(Collectors.joining("; "));
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining("; "));
         // ErrorResponse の組み立て
         ErrorResponse err = new ErrorResponse();
         err.setTimestamp(LocalDateTime.now());
@@ -59,7 +61,8 @@ public class GlobalExceptionHandler {
     }
 
     /** 該当エンティティ未検出 (404) :サービス層・コントローラ層などで「引数不正」「見つからない」を投げた場合, 削除対象が存在しないときなど */
-    @ExceptionHandler({ IllegalArgumentException.class, EmptyResultDataAccessException.class, UsernameNotFoundException.class, EntityNotFoundException.class })
+    @ExceptionHandler({ IllegalArgumentException.class, EmptyResultDataAccessException.class,
+            UsernameNotFoundException.class, EntityNotFoundException.class })
     public ResponseEntity<ErrorResponse> handleNotFound(
             RuntimeException ex,
             HttpServletRequest req) {
@@ -76,7 +79,39 @@ public class GlobalExceptionHandler {
                 .body(err);
     }
 
-    /** その他想定外の例外 (500)　※顧客へは汎用メッセージを返却（内部実装の詳細は隠蔽）*/
+    /** 外部キー制約など「データ整合性違反」時の例外を 409(CONFLICT) に正規化 */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleFkConflict(
+            DataIntegrityViolationException ex,
+            HttpServletRequest req) {
+
+        ErrorResponse err = new ErrorResponse();
+        err.setTimestamp(LocalDateTime.now());
+        err.setStatus(HttpStatus.CONFLICT.value());
+        err.setError(HttpStatus.CONFLICT.getReasonPhrase());
+        err.setMessage("参照中のため削除できません"); // 固定文言 or ex.getMostSpecificCause().getMessage()
+        err.setPath(req.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    /** Service層などで明示的に投げた ResponseStatusException を、そのままのHTTPステータスで返すハンドラ */
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatus(
+            ResponseStatusException ex,
+            HttpServletRequest req) {
+        var status = ex.getStatusCode(); // HttpStatusCode
+        ErrorResponse err = new ErrorResponse();
+        err.setTimestamp(LocalDateTime.now());
+        err.setStatus(status.value());
+        err.setError(status.toString());
+        err.setMessage(ex.getReason());
+        err.setPath(req.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    /** その他想定外の例外 (500) ※顧客へは汎用メッセージを返却（内部実装の詳細は隠蔽） */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAll(
             Exception ex,

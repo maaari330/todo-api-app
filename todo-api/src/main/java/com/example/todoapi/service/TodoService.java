@@ -51,10 +51,12 @@ public class TodoService {
         todo.setTitle(req.getTitle());
         todo.setDone(req.getDone());
         todo.setDueDate(req.getDueDate());
+        if (req.getDueDate() != null && req.getRemindOffsetMinutes() != null && req.getRemindOffsetMinutes() > 0) {
+            todo.setRemindOffsetMinutes(req.getRemindOffsetMinutes());
+        } else {
+            todo.setRemindOffsetMinutes(null);
+        }
         todo.setRepeatType(req.getRepeatType());
-
-        System.out.println("リクエストrepeatType: " + req.getRepeatType());
-
         if (req.getCategoryId() != null) {
             Category cat = categoryRepo.findById(req.getCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException("カテゴリが見つかりません: " + req.getCategoryId()));
@@ -106,10 +108,26 @@ public class TodoService {
         }
         existing.setTitle(req.getTitle());
         existing.setDone(req.getDone());
+        LocalDateTime beforeDue = existing.getDueDate();
         existing.setDueDate(req.getDueDate());
-        existing.setRepeatType(req.getRepeatType());
 
-        System.out.println("▶▶ repeatType in update request: " + req.getRepeatType());
+        Integer beforeOffset = existing.getRemindOffsetMinutes();
+        Integer nextOffset = null;
+        if (req.getDueDate() != null && req.getRemindOffsetMinutes() != null && req.getRemindOffsetMinutes() > 0) {
+            nextOffset = req.getRemindOffsetMinutes();
+        }
+        existing.setRemindOffsetMinutes(nextOffset); // null にもなり得る
+
+        // 期日またはオフセットが変わったら、再通知できるように打刻をクリア
+        boolean dueChanged = (beforeDue == null && existing.getDueDate() != null)
+                || (beforeDue != null && !beforeDue.equals(existing.getDueDate()));
+        boolean offsetChanged = (beforeOffset == null && nextOffset != null)
+                || (beforeOffset != null && !beforeOffset.equals(nextOffset));
+        if (dueChanged || offsetChanged) {
+            existing.setNotifiedAt(null);
+        }
+
+        existing.setRepeatType(req.getRepeatType());
 
         if (req.getCategoryId() != null) {
             Category cat = categoryRepo.findById(req.getCategoryId())
@@ -168,6 +186,8 @@ public class TodoService {
             next.setTags(new HashSet<>(t.getTags()));
             next.setDone(false);
             next.setDueDate(nextDue);
+            next.setRemindOffsetMinutes(t.getRemindOffsetMinutes());
+            next.setNotifiedAt(null);
             repo.save(next);
         }
         return TodoResponse.from(saved);

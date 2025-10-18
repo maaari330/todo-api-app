@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import InAppList from './InAppList';
+import { BellRing } from "lucide-react";
 
 export default function HeaderBell({ keepMounted = false }) {
     const [open, setOpen] = useState(false);
@@ -34,10 +35,7 @@ export default function HeaderBell({ keepMounted = false }) {
                 onClick={() => setOpen(o => !o)}
                 className="relative inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-                {/* シンプルなベルSVG（lucide等が無くてもOK） */}
-                <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2ZM18 8a6 6 0 1 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8Z" />
-                </svg>
+                <BellRing className="h-5 w-5" aria-hidden="true" strokeWidth="2" />
                 <span className="sr-only">通知</span>
             </button>
 

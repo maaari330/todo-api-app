@@ -1,6 +1,5 @@
 package com.example.todoapi.service;
 
-import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
@@ -9,23 +8,28 @@ import com.example.todoapi.dto.tag.TagResponse;
 import com.example.todoapi.dto.tag.UpdateTagRequest;
 import com.example.todoapi.entity.Tag;
 import com.example.todoapi.repository.TagRepository;
+import com.example.todoapi.repository.TodoRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor // final フィールドを引数にとるコンストラクタを自動生成
 public class TagService {
     private final TagRepository repository;
+    private final TodoRepository todoRepo;
 
     /** 全件取得 */
     public List<TagResponse> findAll() {
         return repository.findAll().stream()
-            .map(t -> new TagResponse(t.getId(), t.getName()))
-            .toList();
+                .map(t -> new TagResponse(t.getId(), t.getName()))
+                .toList();
     }
 
     /** タグID で取得（存在しなければ 404） */
     public TagResponse findById(Long id) {
         Tag t = repository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("タグが見つかりません:" + id));
+                .orElseThrow(() -> new IllegalArgumentException("タグが見つかりません:" + id));
         return new TagResponse(t.getId(), t.getName());
     }
 
@@ -38,7 +42,7 @@ public class TagService {
     /** 更新 */
     public TagResponse update(Long id, UpdateTagRequest req) {
         Tag existing = repository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("タグが見つかりません: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("タグが見つかりません: " + id));
         existing.setName(req.getName());
         Tag updated = repository.save(existing);
         return new TagResponse(updated.getId(), updated.getName());
@@ -48,6 +52,11 @@ public class TagService {
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("タグが見つかりません: " + id);
+        }
+        if (todoRepo.existsByTags_Id(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "このタグが付いたタスクが残っているため削除できません");
         }
         repository.deleteById(id);
     }

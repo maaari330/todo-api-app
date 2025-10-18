@@ -68,4 +68,10 @@ public interface TodoRepository extends JpaRepository<Todo, Long>, JpaSpecificat
                         @Param("since") LocalDateTime since,
                         Pageable pageable); // 呼び出し時にPageRequest.of(page, size) → @Queryの末尾に LIMIT size OFFSET
                                             // pageがセットされる
+
+        // Category IDに紐づくタスクの有無
+        boolean existsByCategory_Id(Long categoryId);
+
+        // Tag IDに紐づくタスクの有無
+        boolean existsByTags_Id(Long tagId);
 }

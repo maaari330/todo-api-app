@@ -9,16 +9,20 @@ import { normalizeLocalDateTime } from '../utils/dateUtils';
  * - categories: []
  * - tags: []
  */
-export default function TodoForm({ onClose, initialValues = {}, onSubmit, categories= [], tags = [] }) {
+export default function TodoForm({ onClose, initialValues = {}, onSubmit, categories = [], tags = [] }) {
   const isNew = !initialValues.id // タスク が存在するときは true → 新規作成モード　タスク が存在しないときは false → 編集モード
 
-  const [title, setTitle]           = useState(initialValues.title || '')
-  const [done, setDone]             = useState(initialValues.done ?? false);
-  const [dueDate, setDueDate]       = useState(initialValues.dueDate || '')
+  const [title, setTitle] = useState(initialValues.title || '')
+  const [done, setDone] = useState(initialValues.done ?? false);
+  const [dueDate, setDueDate] = useState(initialValues.dueDate || '')
   const [repeatType, setRepeatType] = useState(initialValues.repeatType != null ? initialValues.repeatType : 'NONE');
   const [categoryId, setCategoryId] = useState(initialValues.category?.id || null)
-  const [tagIds, setTagIds]         = useState(initialValues.tags?.map(t=>t.id) || [])
+  const [tagIds, setTagIds] = useState(initialValues.tags?.map(t => t.id) || [])
   const [submitting, setSubmitting] = useState(false);
+  const [remindAmount, setRemindAmount] = useState(
+    typeof initialValues.remindOffsetMinutes === 'number' ? initialValues.remindOffsetMinutes : null
+  );
+  const [remindUnit, setRemindUnit] = useState('MINUTES');
 
   // initialValues が変わったら内部 state に反映
   useEffect(() => {
@@ -27,14 +31,28 @@ export default function TodoForm({ onClose, initialValues = {}, onSubmit, catego
     setDueDate(initialValues.dueDate || '')
     setRepeatType(initialValues.repeatType != null ? initialValues.repeatType : 'NONE');
     setCategoryId(initialValues.category?.id || null)
-    setTagIds(initialValues.tags?.map(t=>t.id) || [])
+    setTagIds(initialValues.tags?.map(t => t.id) || [])
+    setRemindAmount(
+      typeof initialValues.remindOffsetMinutes === 'number'
+        ? initialValues.remindOffsetMinutes
+        : null
+    );
+    setRemindUnit('MINUTES');
   }, [initialValues])
 
-  // yyyy-MM-ddTHH:mm の形式に揃える（input用）
+  // yyyy-MM-ddTHH:mm の形式に揃える
   const formatForDatetimeLocal = value => {
     if (!value) return '';
     const normalized = normalizeLocalDateTime(value);
     return normalized.substring(0, 16); // yyyy-MM-ddTHH:mm まで切り出す
+  };
+
+  // 分換算
+  const toMinutes = (amount, unit) => {
+    if (!amount) return null;
+    if (unit === 'HOURS') return amount * 60;
+    if (unit === 'DAYS') return amount * 60 * 24;
+    return amount;
   };
 
   const handleSubmit = async e => {
@@ -42,6 +60,8 @@ export default function TodoForm({ onClose, initialValues = {}, onSubmit, catego
     if (!title.trim()) return;
     setSubmitting(true);
     try {
+      const hasDue = !!dueDate;
+      const minutes = hasDue ? toMinutes(remindAmount, remindUnit) : null;
       const payload = {
         title,
         done,
@@ -49,6 +69,7 @@ export default function TodoForm({ onClose, initialValues = {}, onSubmit, catego
         repeatType,
         categoryId: categoryId ?? undefined,
         tagIds: tagIds.length ? tagIds : undefined,
+        remindOffsetMinutes: hasDue && minutes && minutes > 0 ? minutes : undefined,
       }
       await onSubmit(payload)
       onClose?.()
@@ -77,6 +98,31 @@ export default function TodoForm({ onClose, initialValues = {}, onSubmit, catego
         onChange={e => setDueDate(e.target.value)}
         className="w-full border rounded px-3 py-2"
       />
+      {/* リマインド（期限があるときだけ有効） */}
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          min={1}
+          className="border rounded px-3 py-2 w-28"
+          value={remindAmount ?? ''}
+          onChange={e => setRemindAmount(e.target.value ? Number(e.target.value) : null)}
+          placeholder="数値"
+          disabled={!dueDate}
+        />
+        <select
+          className="border rounded px-3 py-2"
+          value={remindUnit}
+          onChange={e => setRemindUnit(e.target.value)}
+          disabled={!dueDate}
+        >
+          <option value="MINUTES">分前</option>
+          <option value="HOURS">時間前</option>
+          <option value="DAYS">日前</option>
+        </select>
+        <span className="text-sm text-gray-500">
+          {dueDate ? '期限の指定時間前に通知' : '期限を入力すると指定できます'}
+        </span>
+      </div>
       {/* 繰り返し設定 */}
       <select
         value={repeatType}
@@ -144,8 +190,8 @@ export default function TodoForm({ onClose, initialValues = {}, onSubmit, catego
             />
             {/* スイッチの土台 */}
             <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-500 transition-colors"></div>
-              {/* スライダー（丸い部分） */}
-              <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
+            {/* スライダー（丸い部分） */}
+            <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
             <span className="ml-3 text-sm font-medium text-gray-900">完了にする</span>
           </label>
         </div>

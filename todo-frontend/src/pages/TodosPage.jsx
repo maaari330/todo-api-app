@@ -36,7 +36,7 @@ export default function TodosPage() {
 
   // 新規タスク作成、編集用TodoDrawer → TodoForm を開く
   const handleNew = () => { setEditingTodo(null); setOpenDrawer(true); };
-  const handleEdit = todo => { 
+  const handleEdit = todo => {
     if (!canModifyTodo(todo, user)) {
       alert('編集権限がありません');
       return;
@@ -46,6 +46,7 @@ export default function TodosPage() {
       repeatType: todo.repeatType || 'NONE',
       category: todo.categoryId ? { id: todo.categoryId } : null,
       tags: (todo.tagIds || []).map(id => ({ id })),
+      remindOffsetMinutes: todo.remindOffsetMinutes ?? null,
     };
     setEditingTodo(editingData);
     setOpenDrawer(true);
@@ -64,42 +65,42 @@ export default function TodosPage() {
 
   return (
     <>
-    {/* ── フィルタ追加ボタン ── */}
-    <div className="flex flex-wrap items-center justify-between mb-4 space-y-2">
-      <div className="flex flex-wrap space-x-4">
-        <SearchBar
-          value={params.keyword}
-          onChange={keyword => setParams(p => ({ ...p, keyword, page: 0 }))} 
-        />
-        <StatusFilter
-          value={params.status}
-          onChange={status => setParams(p => ({ ...p, status, page: 0 }))}
-        />
-        <CategoryFilter
-          categories={categories}
-          value={params.category}
-          onChange={category => setParams(p => ({ ...p, category, page: 0 }))}
-        />
-        <TagFilter
-          tags={tags}
-          selectedIds={params.tags}
-          onChange={tags => setParams(p => ({ ...p, tags, page: 0 }))}
-        />
-        <div className="flex space-x-4">
-          <SortFilter
-            field="title" 
-            label="タイトル"
-            sort={params.sort} 
-            onChange={newSort => setParams(p => ({ ...p, sort: newSort, page: 0 }))}
+      {/* ── フィルタ追加ボタン ── */}
+      <div className="flex flex-wrap items-center justify-between mb-4 space-y-2">
+        <div className="flex flex-wrap space-x-4">
+          <SearchBar
+            value={params.keyword}
+            onChange={keyword => setParams(p => ({ ...p, keyword, page: 0 }))}
           />
-          <SortFilter 
-            field="dueDate" 
-            label="期限" 
-            sort={params.sort} 
-            onChange={newSort => setParams(p => ({ ...p, sort: newSort, page: 0 }))}
+          <StatusFilter
+            value={params.status}
+            onChange={status => setParams(p => ({ ...p, status, page: 0 }))}
           />
+          <CategoryFilter
+            categories={categories}
+            value={params.category}
+            onChange={category => setParams(p => ({ ...p, category, page: 0 }))}
+          />
+          <TagFilter
+            tags={tags}
+            selectedIds={params.tags}
+            onChange={tags => setParams(p => ({ ...p, tags, page: 0 }))}
+          />
+          <div className="flex space-x-4">
+            <SortFilter
+              field="title"
+              label="タイトル"
+              sort={params.sort}
+              onChange={newSort => setParams(p => ({ ...p, sort: newSort, page: 0 }))}
+            />
+            <SortFilter
+              field="dueDate"
+              label="期限"
+              sort={params.sort}
+              onChange={newSort => setParams(p => ({ ...p, sort: newSort, page: 0 }))}
+            />
+          </div>
         </div>
-      </div> 
         {/* ── 新規タスク追加ボタン ── */}
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -107,7 +108,7 @@ export default function TodosPage() {
         >
           + 新規タスク
         </button>
-    </div>
+      </div>
 
       {/* ── タスク一覧 ── */}
       <ul className="divide-y">
