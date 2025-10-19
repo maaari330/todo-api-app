@@ -7,9 +7,9 @@ import java.util.Optional;
 
 /** push_subscriptions のCRUD（JPAリポジトリ） */
 public interface PushSubscriptionRepository extends JpaRepository<PushSubscription, Long> {
-    List<PushSubscription> findByUserId(Long userId);
+    List<PushSubscription> findByOwnerId(Long userId);
 
-    Optional<PushSubscription> findByUserIdAndEndpoint(Long userId, String endpoint);
+    Optional<PushSubscription> findByEndpoint(String endpoint);
 
-    void deleteByUserIdAndEndpoint(Long userId, String endpoint);
+    void deleteByEndpoint(String endpoint);
 }

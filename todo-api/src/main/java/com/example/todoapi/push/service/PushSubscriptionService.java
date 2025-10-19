@@ -6,38 +6,38 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** 購読情報の保存/削除ロジック */
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PushSubscriptionService {
     private final PushSubscriptionRepository repo;
 
-    /* 購読情報をリポジトリに保存 */
     @Transactional
-    public void save(Long userId, String endpoint, String p256dh, String auth, String userAgent) {
-        // 既存があっても必ず更新
-        var existing = repo.findByUserIdAndEndpoint(userId, endpoint);
-        if (existing.isPresent()) {
-            var s = existing.get();
-            s.setP256dh(p256dh);
-            s.setAuth(auth);
-            s.setUserAgent(userAgent);
-            repo.save(s);
-            return;
-        }
-
-        var s = new PushSubscription();
-        s.setUserId(userId);
-        s.setEndpoint(endpoint);
-        s.setP256dh(p256dh);
-        s.setAuth(auth);
-        s.setUserAgent(userAgent);
-        repo.save(s);
+    public PushSubscription upsert(Long ownerId, String endpoint, String p256dh, String auth) {
+        return repo.findByEndpoint(endpoint)
+                .map(s -> {
+                    s.setOwnerId(ownerId);
+                    s.setP256dh(p256dh);
+                    s.setAuth(auth);
+                    return s;
+                })
+                .orElseGet(() -> repo.save(
+                        PushSubscription.builder()
+                                .ownerId(ownerId)
+                                .endpoint(endpoint)
+                                .p256dh(p256dh)
+                                .auth(auth)
+                                .build()));
     }
 
-    /* useridとendpointをキーに購読情報を削除 */
     @Transactional
-    public void deleteByEndpoint(Long userId, String endpoint) {
-        repo.deleteByUserIdAndEndpoint(userId, endpoint);
+    public void unsubscribe(String endpoint) {
+        repo.deleteByEndpoint(endpoint);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PushSubscription> listForOwner(Long ownerId) {
+        return repo.findByOwnerId(ownerId);
     }
 }

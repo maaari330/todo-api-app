@@ -1,10 +1,10 @@
-import { enablePush, disablePush } from '../push'; // push.tsからインポート
+import { ensureSubscription, unsubscribePush } from '../push';
 
 /** 通知の有効化・無効化ボタン表示UI（軽い装飾） */
 export default function PushToggle() {
     const onEnable = async () => {
         try {
-            await enablePush();
+            await ensureSubscription();
             alert('通知を有効化しました');
         } catch (e) {
             alert(e instanceof Error ? e.message : String(e));
@@ -13,7 +13,7 @@ export default function PushToggle() {
 
     const onDisable = async () => {
         try {
-            await disablePush();
+            await unsubscribePush();
             alert('通知を無効化しました');
         } catch (e) {
             alert(e instanceof Error ? e.message : String(e));

@@ -57,14 +57,17 @@ CREATE TABLE todo_tag (
 -- Push 購読（Web Push）
 CREATE TABLE push_subscriptions (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT NOT NULL,
+  owner_id BIGINT NOT NULL,
   endpoint VARCHAR(500) NOT NULL,
   p256dh  VARCHAR(255) NOT NULL,
   auth    VARCHAR(255) NOT NULL,
   user_agent VARCHAR(255),
   created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   CONSTRAINT uq_push_endpoint UNIQUE (endpoint),
-  CONSTRAINT fk_push_subscription_user
-    FOREIGN KEY (user_id) REFERENCES users(id)
-    ON DELETE CASCADE
+  CONSTRAINT fk_push_subscription_owner
+    FOREIGN KEY (owner_id) REFERENCES users(id)
+    ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- インデックス（検索用）
+CREATE INDEX idx_push_owner ON push_subscriptions(owner_id);

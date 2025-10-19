@@ -1,92 +1,64 @@
-import api from './utils/axiosConfig';
+export const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY as string;
 
-/** フロント側での Service Worker の登録
- * バックエンドの /push/subscribe に購読情報の送信 */
-
-// React のビルド時に公開鍵を注入
-const VAPID_PUBLIC_KEY = (process.env.REACT_APP_VAPID_PUBLIC_KEY || '').trim();
-
-/** Base64URL ⇄ バイナリ変換ユーティリティ */
-// 1) VAPID 公開鍵（Base64URL）を Uint8Array（バイト配列）に変換する関数
-function urlBase64ToUint8Array(base64: string) {
-    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
-    const base64Safe = (base64 + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const raw = atob(base64Safe);
-    return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+function urlBase64ToUint8Array(base64String: string) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const raw = atob(base64);
+    const out = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; ++i) out[i] = raw.charCodeAt(i);
+    return out;
 }
 
-// 2) ブラウザの鍵（ArrayBufferで渡される p256dh/auth）を Base64URL に戻す関数
-function bufToBase64Url(buf: ArrayBuffer) {
-    const s = String.fromCharCode(...new Uint8Array(buf));
-    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-}
-
-/** 追加：現在の SW 登録を取得（なければ register）→ 現在の購読を返す（なければ作成） */
-async function getOrCreateSubscription(): Promise<PushSubscription> {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        throw new Error('Push未対応のブラウザです');
-    }
+function assertEnv() {
     if (!VAPID_PUBLIC_KEY) {
-        throw new Error('REACT_APP_VAPID_PUBLIC_KEY が未設定です（.env を確認）');
+        // ビルド時に埋め込まれるので、ここが走るなら .env が読まれていない
+        throw new Error("REACT_APP_VAPID_PUBLIC_KEY is not set");
+    }
+}
+
+/** 購読を作成してサーバへ登録（endpoint/p256dh/authをそのまま送る） */
+export async function ensureSubscription() {
+    assertEnv();
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+        throw new Error("Push not supported");
     }
 
-    // 既存の登録を使う。なければ register（←毎回 register し直さない）
-    const reg =
-        (await navigator.serviceWorker.getRegistration()) ??
-        (await navigator.serviceWorker.register('/sw.js'));
+    // sw.js は public/ に配置（/sw.jsで配信されること）
+    const reg = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+    await navigator.serviceWorker.ready;
 
-    // 権限確認（未許可ならここで終了）
-    const perm = await Notification.requestPermission();
-    if (perm !== 'granted') throw new Error('通知が許可されていません');
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+        sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        });
+    }
 
-    // 既存購読があればそのまま使う（＝endpoint が変わらない限り再購読しない）
-    const existing = await reg.pushManager.getSubscription();
-    if (existing) return existing;
+    const subJson = sub.toJSON() as any;
+    const body = {
+        endpoint: sub.endpoint,
+        keys: { p256dh: subJson.keys.p256dh, auth: subJson.keys.auth },
+    };
 
-    // なければ新規購読を作る
-    return reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
     });
+
+    return sub;
 }
 
-/** ここを呼べば“いまの購読 endpoint”が必ずサーバに登録される（＝DBとブラウザの宛先が一致） */
-export async function enablePush() {
-    const sub = await getOrCreateSubscription();
-
-    // サーバが期待する形（既存と同じ：keys 配下に p256dh/auth）
-    const body = {
-        endpoint: sub.endpoint,
-        keys: {
-            p256dh: bufToBase64Url(sub.getKey('p256dh')!),
-            auth: bufToBase64Url(sub.getKey('auth')!),
-        },
-    };
-
-    // ★重要：ログイン後などアプリ起動時に毎回 upsert 送る
-    //  └ 端末/プロファイル変更や SW 再購読で endpoint が変わっても、DBが最新に追随できる
-    await api.post('/push/subscribe', body);
-    const reg = (await navigator.serviceWorker.getRegistration())
-        ?? (await navigator.serviceWorker.register('/sw.js'));
-    console.log('[SW] register done. scope=', reg.scope);
-    console.log('[push] registered endpoint:', sub.endpoint);
-}
-
-/** 購読解除（サーバから削除 → ブラウザ側も解除） */
-export async function disablePush() {
-    const reg = await navigator.serviceWorker.getRegistration();
-    const sub = await reg?.pushManager.getSubscription();
-    if (!sub) return;
-
-    const body = {
-        endpoint: sub.endpoint,
-        keys: {
-            p256dh: bufToBase64Url(sub.getKey('p256dh')!),
-            auth: bufToBase64Url(sub.getKey('auth')!),
-        },
-    };
-
-    await api.delete('/push/unsubscribe', { data: body });
-    await sub.unsubscribe();
-    console.log('[push] unregistered endpoint:', sub.endpoint);
+/** 購読解除（サーバとブラウザ両方） */
+export async function unsubscribePush() {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (sub) {
+        try {
+            await fetch(`/api/push/subscribe?endpoint=${encodeURIComponent(sub.endpoint)}`, { method: "DELETE" });
+        } finally {
+            await sub.unsubscribe();
+        }
+    }
 }

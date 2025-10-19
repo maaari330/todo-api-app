@@ -1,37 +1,47 @@
 package com.example.todoapi.push.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.OffsetDateTime;
 
+@Entity
+@Table(name = "push_subscriptions", indexes = {
+        @Index(name = "idx_push_endpoint", columnList = "endpoint", unique = true),
+        @Index(name = "idx_push_owner", columnList = "ownerId")
+})
 @Getter
 @Setter
-@Entity
-@Table(name = "push_subscriptions", uniqueConstraints = @UniqueConstraint(name = "uq_endpoint", columnNames = "endpoint"))
-@Schema(description = "Web Push の購読情報（1レコード=1ブラウザ/端末上の1購読）")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PushSubscription {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    /** アプリ上のユーザーID（未ログイン購読なら null でもOK） */
+    private Long ownerId;
 
-    @Column(nullable = false, length = 500)
+    /** FCM 等のエンドポイント */
+    @Column(nullable = false, length = 1024)
     private String endpoint;
 
+    /** Base64URL（ブラウザから来た p256dh をそのまま） */
     @Column(nullable = false, length = 255)
     private String p256dh;
 
+    /** Base64URL（ブラウザから来た auth をそのまま） */
     @Column(nullable = false, length = 255)
     private String auth;
 
-    @Column(name = "user_agent", length = 255) // 端末やブラウザの目安（例: Windows NT 10.0）
-    private String userAgent;
+    @Column(nullable = false)
+    private OffsetDateTime createdAt;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null)
+            createdAt = OffsetDateTime.now();
+    }
 }

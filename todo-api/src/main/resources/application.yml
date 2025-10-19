@@ -73,6 +73,9 @@ logging:
     '[org.springframework.security]': DEBUG
     '[org.springframework.web]': DEBUG
     '[org.hibernate.orm.jdbc.bind]': TRACE
+    '[org.apache.http]': DEBUG
+    '[org.apache.http.headers]': DEBUG
+    '[org.apache.http.wire]': DEBUG
     '[com.example.todoapi]': INFO
     '[com.example.todoapi.notification]': INFO
     '[com.example.todoapi.push]': INFO

@@ -1,61 +1,77 @@
 package com.example.todoapi.push.service;
 
-import com.example.todoapi.push.repository.PushSubscriptionRepository;
+import com.example.todoapi.push.entity.PushSubscription;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
-
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
-/** Web Push実送信（PushServiceにペイロードを渡して各端末へ送る） */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WebPushSender {
-    private final PushService pushService; // WebPushConfigクラスでカスタマイズされたインスタンスが自動注入される
-    private final PushSubscriptionRepository repo;
 
-    /* ユーザー全端末に送信。何か1つでも成功すれば true */
-    public int sendToUser(Long userId, Long todoId, String title, String body, String url) {
-        var subs = repo.findByUserId(userId); // ユーザーの購読一覧を取得
+    private final PushService pushService;
+    private final PushSubscriptionService subscriptionService;
+    private final ObjectMapper om = new ObjectMapper();
+
+    /** 単一購読に送る低レベル API（成功: true） */
+    public boolean send(String endpoint, String p256dh, String auth, PushPayload payload) {
+        try {
+            String json = om.writeValueAsString(payload);
+            Notification n = new Notification(endpoint, p256dh, auth, json);
+            pushService.send(n);
+            return true;
+        } catch (Exception e) {
+            log.warn("[webpush] failed endpoint={} err={}", endpoint, e.toString());
+            return false;
+        }
+    }
+
+    /**
+     * 指定ユーザーの全購読に push を送信し、成功件数を返す。
+     * NotificationJob から呼ぶ公開API（シグネチャはジョブ側に合わせてあります）
+     */
+    public int sendToUser(Long ownerId, Long todoId, String title, String body, String url) {
+        // ownerId が null の場合は匿名購読などへ送る実装に変えてもOK
+        List<PushSubscription> subs = subscriptionService.listForOwner(ownerId);
+        if (subs.isEmpty()) {
+            log.debug("[webpush] no subscriptions ownerId={}", ownerId);
+            return 0;
+        }
+
         int delivered = 0;
-        String tag = (todoId != null) ? ("todo-" + todoId) : "todo-general";
+        PushPayload payload = new PushPayload(
+                title,
+                body,
+                (url != null ? url : "/"),
+                "/icons/icon-192.png",
+                todoId,
+                ownerId);
 
-        for (var s : subs) {
-            try {
-                var json = """
-                        {"title": %s, "body": %s, "url": %s, "todoId": %s, "tag": %s, "renotify": true}
-                        """.formatted(quote(title), quote(body), quote(url != null ? url : "/"),
-                        (todoId != null ? String.valueOf(todoId) : "null"), quote(tag));
-                var n = new Notification(s.getEndpoint(), s.getP256dh(), s.getAuth(),
-                        json.getBytes(StandardCharsets.UTF_8)); // 上記jsonペイロードを含めた通知を作成
-
-                var resp = pushService.send(n); // エンドポイント（ユーザーが使用するブラウザのService Worker）にHTTP POSTを実行
-                int code = resp.getStatusLine().getStatusCode();
-                String respBody = (resp.getEntity() != null) ? EntityUtils.toString(resp.getEntity()) : "";
-                // ★ 成否カウントはコードを見てから
-                if (code == 201 || code == 202) {
-                    delivered++;
-                } else {
-                    // 410/404 は購読が死んでいる可能性が高い（最小限の後始末）
-                    if (code == 404 || code == 410) {
-                        try {
-                            repo.deleteByUserIdAndEndpoint(userId, s.getEndpoint());
-                        } catch (Exception ignore) {
-                        }
-                    }
-                }
-                System.out.printf("[webpush] endpoint=%s code=%d body=%s%n", s.getEndpoint(), code, respBody);
-            } catch (Exception e) {
-                System.err.printf("[notify] push failed endpoint=%s err=%s%n", s.getEndpoint(), e.toString());
+        for (PushSubscription s : subs) {
+            boolean ok = send(s.getEndpoint(), s.getP256dh(), s.getAuth(), payload);
+            if (ok)
+                delivered++;
+            else {
+                // 410 Gone 等の恒久失敗なら購読削除も検討（ライブラリの例外/レスポンスで分岐）
+                // subscriptionService.unsubscribe(s.getEndpoint());
             }
         }
         return delivered;
     }
 
-    private static String quote(String s) {
-        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+    /** 表示/クリック遷移などで使うペイロード */
+    public record PushPayload(
+            String title,
+            String body,
+            String url,
+            String icon,
+            Long todoId,
+            Long ownerId) {
     }
 }
