@@ -57,7 +57,7 @@ CREATE TABLE todo_tag (
 -- Push 購読（Web Push）
 CREATE TABLE push_subscriptions (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  owner_id BIGINT NOT NULL,
+  owner_id BIGINT NULL,
   endpoint VARCHAR(1024) NOT NULL,
   p256dh  VARCHAR(255) NOT NULL,
   auth    VARCHAR(255) NOT NULL,

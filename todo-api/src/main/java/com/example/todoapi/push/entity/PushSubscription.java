@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "push_subscriptions", indexes = {
         @Index(name = "idx_push_endpoint", columnList = "endpoint", unique = true),
-        @Index(name = "idx_push_owner", columnList = "ownerId")
+        @Index(name = "idx_push_owner", columnList = "owner_id")
 })
 @Getter
 @Setter
@@ -22,6 +22,7 @@ public class PushSubscription {
     private Long id;
 
     /** アプリ上のユーザーID（未ログイン購読なら null でもOK） */
+    @Column(name = "owner_id")
     private Long ownerId;
 
     /** FCM 等のエンドポイント */
