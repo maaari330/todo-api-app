@@ -58,7 +58,7 @@ CREATE TABLE todo_tag (
 CREATE TABLE push_subscriptions (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   owner_id BIGINT NULL,
-  endpoint VARCHAR(1024) NOT NULL,
+  endpoint VARCHAR(512) NOT NULL,
   p256dh  VARCHAR(255) NOT NULL,
   auth    VARCHAR(255) NOT NULL,
   user_agent VARCHAR(255),

@@ -26,7 +26,7 @@ public class PushSubscription {
     private Long ownerId;
 
     /** FCM 等のエンドポイント */
-    @Column(nullable = false, length = 1024)
+    @Column(nullable = false, length = 512)
     private String endpoint;
 
     /** Base64URL（ブラウザから来た p256dh をそのまま） */
