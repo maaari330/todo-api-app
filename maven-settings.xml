@@ -1,0 +1,24 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <profiles>
+    <profile>
+      <id>net-hardening</id>
+      <properties>
+        <!-- 5回までリトライ -->
+        <maven.wagon.http.retryHandler.count>5</maven.wagon.http.retryHandler.count>
+        <!-- プールを切って素直に張り直す（環境次第で改善） -->
+        <maven.wagon.http.pool>false</maven.wagon.http.pool>
+
+        <!-- タイムアウトゆったり（ミリ秒） -->
+        <maven.wagon.http.connectionTimeout>600000</maven.wagon.http.connectionTimeout>
+        <maven.wagon.http.timeout>600000</maven.wagon.http.timeout>
+        <maven.wagon.rto>600000</maven.wagon.rto>
+      </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>net-hardening</activeProfile>
+  </activeProfiles>
+</settings>
