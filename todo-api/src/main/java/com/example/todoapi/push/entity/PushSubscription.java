@@ -3,46 +3,39 @@ package com.example.todoapi.push.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Entity
-@Table(name = "push_subscriptions", indexes = {
-        @Index(name = "idx_push_endpoint", columnList = "endpoint", unique = true),
-        @Index(name = "idx_push_owner", columnList = "owner_id")
-})
+@Table(name = "push_subscriptions", uniqueConstraints = @UniqueConstraint(name = "uq_user_endpoint", columnNames = {
+        "user_id", "endpoint" }))
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class PushSubscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** アプリ上のユーザーID（未ログイン購読なら null でもOK） */
-    @Column(name = "owner_id")
-    private Long ownerId;
+    /** アプリ上のユーザーID */
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     /** FCM 等のエンドポイント */
-    @Column(nullable = false, length = 512)
+    @Column(nullable = false, length = 500)
     private String endpoint;
 
     /** Base64URL（ブラウザから来た p256dh をそのまま） */
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 150)
     private String p256dh;
 
     /** Base64URL（ブラウザから来た auth をそのまま） */
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 150)
     private String auth;
 
-    @Column(nullable = false)
-    private OffsetDateTime createdAt;
+    @Column(name = "user_agent")
+    private String userAgent;
 
-    @PrePersist
-    void onCreate() {
-        if (createdAt == null)
-            createdAt = OffsetDateTime.now();
-    }
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
 }

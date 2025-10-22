@@ -36,11 +36,11 @@ public class WebPushSender {
      * 指定ユーザーの全購読に push を送信し、成功件数を返す。
      * NotificationJob から呼ぶ公開API（シグネチャはジョブ側に合わせてあります）
      */
-    public int sendToUser(Long ownerId, Long todoId, String title, String body, String url) {
+    public int sendToUser(Long userId, Long todoId, String title, String body, String url) {
         // ownerId が null の場合は匿名購読などへ送る実装に変えてもOK
-        List<PushSubscription> subs = subscriptionService.listForOwner(ownerId);
+        List<PushSubscription> subs = subscriptionService.listForUser(userId);
         if (subs.isEmpty()) {
-            log.debug("[webpush] no subscriptions ownerId={}", ownerId);
+            log.debug("[webpush] no subscriptions ownerId={}", userId);
             return 0;
         }
 
@@ -51,7 +51,7 @@ public class WebPushSender {
                 (url != null ? url : "/"),
                 "/icons/icon-192.png",
                 todoId,
-                ownerId);
+                userId);
 
         for (PushSubscription s : subs) {
             boolean ok = send(s.getEndpoint(), s.getP256dh(), s.getAuth(), payload);
@@ -72,6 +72,6 @@ public class WebPushSender {
             String url,
             String icon,
             Long todoId,
-            Long ownerId) {
+            Long userId) {
     }
 }
