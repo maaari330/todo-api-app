@@ -84,13 +84,14 @@ public class SecurityConfig {
                 // 4. エンドポイント毎の認可設定
                 .authorizeHttpRequests(authz -> authz
                         // ─── 認証不要 ─────────────────────────────
-                        .requestMatchers("/auth/login", "/auth/signup").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/signup").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // ─── 認証必須 ─────────────────────────────
-                        .requestMatchers("/auth/logout").authenticated()
-                        .requestMatchers("/auth/me", "/notifications/**", "/push/**").authenticated()
-                        .requestMatchers("/actuator/**", "/todos/**", "/categories/**", "/tags/**").authenticated()
+                        .requestMatchers("/api/auth/logout").authenticated()
+                        .requestMatchers("/api/auth/me", "/api/notifications/**", "/api/push/**").authenticated()
+                        .requestMatchers("/api/actuator/**", "/api/todos/**", "/api/categories/**", "/api/tags/**")
+                        .authenticated()
                         // ─── その他 ───────────────────────────────
                         .anyRequest().denyAll())
                 // 4. Basic 認証は actuator のみで使う → 全体では無効化

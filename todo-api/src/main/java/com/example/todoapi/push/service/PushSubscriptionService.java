@@ -15,6 +15,9 @@ public class PushSubscriptionService {
 
     @Transactional
     public PushSubscription upsert(Long ownerId, String endpoint, String p256dh, String auth) {
+        if (ownerId == null) {
+            throw new IllegalArgumentException("ownerId must not be null");
+        }
         return repo.findByEndpoint(endpoint)
                 .map(s -> {
                     s.setOwnerId(ownerId);
@@ -32,8 +35,11 @@ public class PushSubscriptionService {
     }
 
     @Transactional
-    public void unsubscribe(String endpoint) {
-        repo.deleteByEndpoint(endpoint);
+    public void unsubscribeOwned(Long ownerId) {
+        if (ownerId == null) {
+            throw new IllegalArgumentException("ownerId must not be null");
+        }
+        repo.deleteByOwnerId(ownerId);
     }
 
     @Transactional(readOnly = true)
