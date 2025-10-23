@@ -35,19 +35,19 @@ todo-api-app サイト解説
     
     ・　主な API エンドポイント
     パス	　　　　　　　　　メソッド	　　　　　　　概要
-    /todos	　　　　　　　　　GET	　　　　　　　　　  タスク一覧の取得。タイトル検索や完了状態、カテゴリID、タグID 等でフィルタリング可能。
-    /todos	　　　　　　　　　POST	　　　　　　　　　タスクの作成。タイトル、期限、繰り返し種別、カテゴリ・タグ ID、リマインダー などを JSON で送信。
-    /todos/{id}	　　　　　　　PUT	　　　　　　　　　既存タスクの更新。
-    /todos/{id}	　　　　　　　DELETE	　　　　　　　  タスクの削除。
-    /todos/{id}	　　　　　　　PATCH	　　　　　　　　完了フラグのトグル。
-    /categories	　　　　　　　GET/POST/PUT/DELETE	カテゴリの一覧取得・作成・更新・削除。タスクに紐づくカテゴリは削除不可。
-    /tags	　　　　　　　　　　GET/POST/PUT/DELETE	　タグの一覧取得・作成・更新・削除。タスクに紐づくタグは削除不可。
-    /auth/signup	　　　　　　POST	　　　　　　　　 新規ユーザー登録。
-    /auth/login	　　　　　　　POST	　　　　　　　　 ユーザー名・パスワードから JWT トークンを取得。
-    /auth/me	　　　　　　　　GET	　　　　　　　　 現在のユーザー情報を返却。※Authorization ヘッダーに Bearer <token> を付与する必要がある。
-    /api/push/public-key	　 GET	  　　　　　　　 Web Push の公開鍵 (VAPID) を取得。
-    /api/push/subscribe	     POST/DELETE	        Push 購読を登録・解除。
-    /notifications/in-app/recent	GET	            最新のアプリ内通知を取得。
+    /todos	　　　　　　　　　　　GET	　　　　　　　　　  タスク一覧の取得。タイトル検索や完了状態、カテゴリID、タグID 等でフィルタリング可能。
+    /todos	　　　　　　　　　　　POST	　　　　　　　タスクの作成。タイトル、期限、繰り返し種別、カテゴリ・タグ ID、リマインダー などを JSON で送信。
+    /todos/{id}	　　　　　　　 PUT	　　　　　　　　　   既存タスクの更新。
+    /todos/{id}	　　　　　　　 DELETE	　　　　　　　タスクの削除。
+    /todos/{id}	　　　　　　　 PATCH	　　　　　　　完了フラグのトグル。
+    /categories	　　　　　　　 GET/POST/PUT/DELETE	 カテゴリの一覧取得・作成・更新・削除。タスクに紐づくカテゴリは削除不可。
+    /tags	　　　　　　　　　　 GET/POST/PUT/DELETE	 タグの一覧取得・作成・更新・削除。タスクに紐づくタグは削除不可。
+    /auth/signup	　　　　　　   POST	　　　　　　　新規ユーザー登録。
+    /auth/login	　　　　　　　 POST	　　　　　　　ユーザー名・パスワードから JWT トークンを取得。
+    /auth/me	　　　　　　　 GET	　　　　　　　　    現在のユーザー情報を返却。※Authorization ヘッダーに Bearer <token> を付与する必要がある。
+    /api/push/public-key	　GET	  　　　　　　　    Web Push の公開鍵 (VAPID) を取得。
+    /api/push/subscribe	        POST/DELETE	       Push 購読を登録・解除。
+    /notifications/in-app/recent  GET	             最新のアプリ内通知を取得。
 
 
  フロントエンド (todo-frontend) 
@@ -100,7 +100,7 @@ todo-api-app サイト解説
       docker compose up -d
       
       docker-compose.yml では MySQL とバックエンド、フロントエンドをそれぞれ db、app、web サービスとして定義し、.env で設定した環境変数を読み込みます。
-      バックエンドは MySQL がヘルシーになるまで待ってから起動し、フロントエンドは Nginx で 80 番ポートにホストされます。
+      バックエンドは、MySQL がヘルスチェックを通過して正常稼働になるまで起動を待機し、フロントエンドは Nginx でポート 80 から配信されます。
       
       4. 起動後、次の URL にアクセスして動作を確認します。
             フロントエンド: http://localhost:3000
