@@ -40,8 +40,8 @@ todo-api-app サイト解説
     /todos/{id}	　　　　　　　PUT	　　　　　　　　　既存タスクの更新。
     /todos/{id}	　　　　　　　DELETE	　　　　　　　  タスクの削除。
     /todos/{id}	　　　　　　　PATCH	　　　　　　　　完了フラグのトグル。
-    /categories	　　　　　　　GET/POST/PUT/DELETE	カテゴリの一覧取得・作成・更新・削除。タスクに紐づくカテゴリは削除。
-    /tags	　　　　　　　　　　GET/POST/PUT/DELETE	　タグの一覧取得・作成・更新・削除。タスクに紐づくタグは削除できません。
+    /categories	　　　　　　　GET/POST/PUT/DELETE	カテゴリの一覧取得・作成・更新・削除。タスクに紐づくカテゴリは削除不可。
+    /tags	　　　　　　　　　　GET/POST/PUT/DELETE	　タグの一覧取得・作成・更新・削除。タスクに紐づくタグは削除不可。
     /auth/signup	　　　　　　POST	　　　　　　　　 新規ユーザー登録。
     /auth/login	　　　　　　　POST	　　　　　　　　 ユーザー名・パスワードから JWT トークンを取得。
     /auth/me	　　　　　　　　GET	　　　　　　　　 現在のユーザー情報を返却。※Authorization ヘッダーに Bearer <token> を付与する必要がある。
@@ -65,66 +65,47 @@ todo-api-app サイト解説
     Docker 環境では Nginx が /api パスをバックエンドにリバースプロキシします。
 
 セットアップ方法
-前提条件
+0. 前提条件
+Docker Desktop　と Docker Compose が動作する環境
 
-Docker Desktop
- と Docker Compose が動作する環境
-
-任意の場合：Java 17 と Maven、Node.js 18+ / npm 8+ （Docker を使用しない場合）
-
-.env の作成
-
-アプリを起動する前にリポジトリのルートに .env ファイルを作成し、次のような環境変数を設定します（必要に応じて変更してください）。
-
-MYSQL_ROOT_PASSWORD=your_root_password
-MYSQL_DATABASE=todo
-SPRING_DATASOURCE_USERNAME=root
-SPRING_DATASOURCE_PASSWORD=your_root_password
-
-# JWT 秘密鍵と有効期限（ミリ秒）。例では 24 時間を指定
-JWT_SECRETKEY=YourRandomJwtSecretKey
-JWT_EXPIRATION=86400000
-
-# Actuator 用 Basic 認証（Swagger/健康チェック用）
-ACTUATOR_USER=admin
-ACTUATOR_PASSWORD=adminpass
-
-# スケジューラのスレッドプールサイズと通知ジョブ間隔（ミリ秒）
-SCHEDULER_POOL_SIZE=5
-NOTIFY_SCAN_MS=60000
-
-# Web Push (VAPID) キー。`web-push` パッケージ等で生成できます
-VAPID_PUBLIC_KEY=YourPublicKey
-VAPID_PRIVATE_KEY=YourPrivateKey
-VAPID_SUBJECT=mailto:you@example.com
-
-# (オプション) フロントエンドが直接 API にアクセスする場合の URL
-REACT_APP_API_URL=http://localhost:8080
-
-Docker Compose で起動する
-
-リポジトリをクローンします。
-
+1. リポジトリをクローンします。
 git clone https://github.com/maaari330/todo-api-app.git
 cd todo-api-app
 
+2. .env の作成
+アプリを起動する前にリポジトリのルートに .env ファイルを作成し、次のような環境変数を設定します（必要に応じて変更してください）。
+      MYSQL_ROOT_PASSWORD=your_root_password
+      MYSQL_DATABASE=todo
+      SPRING_DATASOURCE_USERNAME=root
+      SPRING_DATASOURCE_PASSWORD=your_root_password
+JWT 秘密鍵と有効期限（ミリ秒）。例では 24 時間を指定
+      JWT_SECRETKEY=YourRandomJwtSecretKey
+      JWT_EXPIRATION=86400000
+Actuator 用 Basic 認証（Swagger/健康チェック用）
+      ACTUATOR_USER=admin
+      ACTUATOR_PASSWORD=adminpass
+スケジューラのスレッドプールサイズと通知ジョブ間隔（ミリ秒）
+      SCHEDULER_POOL_SIZE=5
+      NOTIFY_SCAN_MS=60000
+Web Push (VAPID) キー。`web-push` パッケージ等で生成できます
+      VAPID_PUBLIC_KEY=YourPublicKey
+      VAPID_PRIVATE_KEY=YourPrivateKey
+      VAPID_SUBJECT=mailto:you@example.com
+ (オプション) フロントエンドが直接 API にアクセスする場合の URL
+　　※Nginxが/api→app:8080へプロキシする構成となっているため、オプションにしています。
+      REACT_APP_API_URL=http://localhost:8080
 
+3. Docker Compose で起動する
 上記 .env ファイルを用意したら、Docker Compose でサービスを起動します。
-
 docker compose up -d
 
+docker-compose.yml では MySQL とバックエンド、フロントエンドをそれぞれ db、app、web サービスとして定義し、.env で設定した環境変数を読み込みます。
+バックエンドは MySQL がヘルシーになるまで待ってから起動し、フロントエンドは Nginx で 80 番ポートにホストされます。
 
-docker-compose.yml では MySQL とバックエンド、フロントエンドをそれぞれ db、app、web サービスとして定義し、.env で設定した環境変数を読み込みます。バックエンドは MySQL がヘルシーになるまで待ってから起動し、フロントエンドは Nginx で 80 番ポートにホストされます
-github.com
-。
-
-起動後、次の URL にアクセスして動作を確認します。
-
-フロントエンド: http://localhost:3000
-
-バックエンド API: http://localhost:8080
-
-Swagger UI: http://localhost:8080/swagger-ui.html
+4. 起動後、次の URL にアクセスして動作を確認します。
+      フロントエンド: http://localhost:3000
+      バックエンド API: http://localhost:8080
+      Swagger UI: http://localhost:8080/swagger-ui.html
 
 個別にビルド／実行する場合
 
@@ -179,14 +160,5 @@ github.com
 
 .env ファイルには多くの変数がありますが、不要な変数は削除しても動作に影響しません。通知機能を使用する場合は Web Push (VAPID) キーを必ず設定してください。
 
-参考資料
-
-Spring Boot 公式ドキュメント
-
-Create React App
- – フロントエンドの雛形
-
-Web Push プロトコル
- – ブラウザ通知の基礎
 
 以上がこのリポジトリの概要とセットアップ手順です。Docker を使えば簡単に環境構築ができるので、ぜひ試してみてください。問題があれば Issues 等で報告してください。
