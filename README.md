@@ -1,23 +1,24 @@
 todo-api-app サイト解説
 
-このリポジトリは Todo タスク管理アプリケーション の実装です。バックエンドは Spring Boot、フロントエンドは React/TypeScript で実装しており、Docker Compose で起動できます。
-ユーザー登録・JWT 認証、カテゴリ／タグ管理、繰り返しタスク、期日・リマインダー、カレンダー表示、Web Push/In App 通知などの機能を備えています。
-以下では構成やセットアップ方法、主な API エンドポイント、フロントエンドの機能について解説します。
+      このリポジトリは Todo タスク管理アプリケーション の実装です。バックエンドは Spring Boot、フロントエンドは React/TypeScript で実装しており、Docker Compose で起動できます。
+    ユーザー登録・JWT 認証、カテゴリ／タグ管理、繰り返しタスク、期日・リマインダー、カレンダー表示、Web Push/In App 通知などの機能を備えています。
+    以下では構成やセットアップ方法、主な API エンドポイント、フロントエンドの機能について解説します。
 
-リポジトリ構成
-├─ todo-api/            # Spring Boot バックエンド
-│  ├─ src/main/java/com/example/todoapi/…
-│  ├─ src/main/resources/application.yml
-│  └─ Dockerfile
-├─ todo-frontend/       # React フロントエンド
-│  ├─ src/
-│  ├─ public/
-│  └─ package.json
-├─ mysql/               # MySQL 用 Dockerfile
-├─ docker-compose.yml   # DB/API/フロントの統合起動
-└─ .github/workflows/   # CI 設定
+    リポジトリ構成
+    ├─ todo-api/            # Spring Boot バックエンド
+    │  ├─ src/main/java/com/example/todoapi/…
+    │  ├─ src/main/resources/application.yml
+    │  └─ Dockerfile
+    ├─ todo-frontend/       # React フロントエンド
+    │  ├─ src/
+    │  ├─ public/
+    │  └─ package.json
+    ├─ mysql/               # MySQL 用 Dockerfile
+    ├─ docker-compose.yml   # DB/API/フロントの統合起動
+    └─ .github/workflows/   # CI 設定
 
-< バックエンド (todo-api) >
+ バックエンド (todo-api) 
+ 
     Spring Boot 3 (Java 17) と Spring Data JPA を用いた RESTful API。タスクやカテゴリ、タグを管理するエンドポイントを提供します。
     
     Todo エンティティはタイトル、完了フラグ、期限、繰り返し種別、カテゴリ、タグ、リマインダー時刻等を保持。
@@ -49,7 +50,8 @@ todo-api-app サイト解説
     /notifications/in-app/recent	GET	            最新のアプリ内通知を取得。
 
 
-< フロントエンド (todo-frontend) >
+ フロントエンド (todo-frontend) 
+ 
     React 18 と Tailwind CSS を用いた SPA。
     create-react-app で作成しており、エントリポイントは src/App.js です。
     AuthContext を通じて認証状態を管理し、React Router DOM で画面遷移します。
