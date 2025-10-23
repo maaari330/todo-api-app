@@ -1,5 +1,6 @@
 package com.example.todoapi.push.web;
 
+import com.example.todoapi.push.config.VapidProperties;
 import com.example.todoapi.push.dto.SubscribeRequest;
 import com.example.todoapi.push.service.PushSubscriptionService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,12 @@ import java.nio.file.attribute.UserPrincipal;
 @RequiredArgsConstructor
 public class PushController {
     private final PushSubscriptionService service;
-    private final String vapidPublicKey;
+    private final VapidProperties vapid;
 
     /** 公開鍵の取得 */
     @GetMapping("/public-key")
     public ResponseEntity<String> publicKey() {
-        return ResponseEntity.ok(vapidPublicKey);
+        return ResponseEntity.ok(vapid.getPublicKey());
     }
 
     /** 購読登録 */

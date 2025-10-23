@@ -1,43 +1,44 @@
 import { ensureSubscription, unsubscribePush } from '../push';
+import { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
-/** 通知の有効化・無効化ボタン表示UI（軽い装飾） */
+/** 通知の有効化・無効化ボタン表示UI */
 export default function PushToggle() {
-    const onEnable = async () => {
-        try {
-            await ensureSubscription();
-            alert('通知を有効化しました');
-        } catch (e) {
-            alert(e instanceof Error ? e.message : String(e));
-        }
-    };
+    const { user } = useAuth();
+    const [enabled, setEnabled] = useState(false);
+    const [busy, setBusy] = useState(false);
 
-    const onDisable = async () => {
+    if (!user) return null;
+    const handleClick = async () => {
+        setBusy(true);
         try {
-            await unsubscribePush();
-            alert('通知を無効化しました');
+            if (!enabled) {
+                await ensureSubscription();
+                setEnabled(true);
+                alert('通知を有効化しました');
+            } else {
+                await unsubscribePush();
+                setEnabled(false);
+                alert('通知を無効化しました');
+            }
         } catch (e) {
             alert(e instanceof Error ? e.message : String(e));
+        } finally {
+            setBusy(false);
         }
     };
 
     return (
-        <div className="inline-flex items-center gap-2">
-            <button
-                type="button"
-                onClick={onEnable}
-                className="rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-                title="ブラウザ通知を許可"
-            >
-                通知を有効化
-            </button>
-            <button
-                type="button"
-                onClick={onDisable}
-                className="rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
-                title="ブラウザ通知を無効化"
-            >
-                無効化
-            </button>
-        </div>
+        <button
+            type="button"
+            onClick={handleClick}
+            disabled={busy}
+            aria-pressed={enabled}
+            className={`rounded-md px-3 py-2 text-sm font-medium shadow ${enabled ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-800'
+                }`}
+            title={enabled ? '通知を無効化' : '通知を有効化'}
+        >
+            {busy ? '処理中…' : enabled ? '通知をOFF' : '通知をON'}
+        </button>
     );
 }
