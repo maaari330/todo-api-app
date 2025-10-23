@@ -10,8 +10,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  // 1) ログインAPIにはAuthorizationを付けない
-  if (config.url?.endsWith('/auth/login')) return config;
+  // 1) ログイン・新規登録APIにはAuthorizationを付けない
+  if (config.url?.endsWith('/auth/login') || config.url?.endsWith('/auth/signup')) return config;
 
   // 2) 呼び出し側で Authorization:'' を指定したら付けない（尊重）
   if (config.headers?.Authorization === '') return config;
