@@ -14,7 +14,7 @@ import java.nio.file.attribute.UserPrincipal;
  * Nginx のリバプロで /api/ が Spring Boot に流れる前提。
  */
 @RestController
-@RequestMapping("/api/push")
+@RequestMapping("/push")
 @RequiredArgsConstructor
 public class PushController {
     private final PushSubscriptionService service;

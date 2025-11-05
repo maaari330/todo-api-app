@@ -66,10 +66,10 @@ export default function TodoForm({ onClose, initialValues = {}, onSubmit, catego
         title,
         done,
         dueDate: dueDate ? normalizeLocalDateTime(dueDate) : undefined,
+        remindOffsetMinutes: hasDue && minutes != null && minutes >= 0 ? minutes : undefined,
         repeatType,
         categoryId: categoryId ?? undefined,
         tagIds: tagIds.length ? tagIds : undefined,
-        remindOffsetMinutes: hasDue && minutes && minutes > 0 ? minutes : undefined,
       }
       await onSubmit(payload)
       onClose?.()

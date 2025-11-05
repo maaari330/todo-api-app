@@ -19,11 +19,11 @@ export const todoService = {
     return res.data;
   },
   /** 新規作成 */
-  create: async ({ title, dueDate, repeatType, categoryId, tagIds }) =>
-    api.post('/todos', { title, dueDate, repeatType, categoryId, tagIds }),
+  create: async ({ title, dueDate, remindOffsetMinutes, repeatType, categoryId, tagIds }) =>
+    api.post('/todos', { title, dueDate, remindOffsetMinutes, repeatType, categoryId, tagIds }),
   /** 更新 */
-  update: async (id, { title, dueDate, done, repeatType, categoryId, tagIds }) =>
-    api.put(`/todos/${id}`, { title, dueDate, done, repeatType, categoryId, tagIds }),
+  update: async (id, { title, dueDate, remindOffsetMinutes, done, repeatType, categoryId, tagIds }) =>
+    api.put(`/todos/${id}`, { title, dueDate, remindOffsetMinutes, done, repeatType, categoryId, tagIds }),
   /** 完了・未完了切替 */
   toggle: async id =>
     api.patch(`/todos/${id}`),

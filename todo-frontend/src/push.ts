@@ -23,7 +23,7 @@ export async function ensureSubscription() {
     const publicKey = await getVapidPublicKey();
 
     // Service Worker登録
-    const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    const reg = await getRegistration();
     await navigator.serviceWorker.ready;
     let sub = await reg.pushManager.getSubscription();
     if (!sub) {
@@ -59,4 +59,19 @@ export async function unsubscribePush() {
             await sub.unsubscribe();
         }
     }
+}
+
+/** 既にService Worker 登録済みか確認 */
+async function getRegistration(): Promise<ServiceWorkerRegistration> {
+    const existing = await navigator.serviceWorker.getRegistration('/');
+    if (existing) return existing;
+    return navigator.serviceWorker.register('/sw.js', { scope: '/' });
+}
+
+/** ブラウザにPush購読があるかの確認のみ */
+export async function isSubscribed(): Promise<boolean> {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+    const reg = await getRegistration();
+    const sub = await reg.pushManager.getSubscription();
+    return !!sub;
 }
