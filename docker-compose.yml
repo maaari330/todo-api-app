@@ -7,13 +7,11 @@ services:
     image: todo-mysql:8.0
     container_name: todo-db
     restart: always
-    command: [ "mysqld", "--default-time-zone=+09:00" ]
+    command: [ "mysqld", "--default-time-zone=+00:00" ]
     env_file:
       - .env
     environment:
       TZ: ${TZ}
-      SPRING_JACKSON_TIME_ZONE: ${SPRING_JACKSON_TIME_ZONE}
-      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: ${SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE}
     volumes:
       - db-data:/var/lib/mysql # DB データはボリュームに保持
     ports:
@@ -39,7 +37,7 @@ services:
     restart: always
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=${TZ}&characterEncoding=utf8
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: ${TZ}

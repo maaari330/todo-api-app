@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.example.todoapi.entity.Todo;
 import com.example.todoapi.entity.RepeatType;
 import com.example.todoapi.entity.Tag;
+import com.example.todoapi.util.TimeZoneConverter;
 
 @Getter
 @AllArgsConstructor
@@ -48,7 +49,7 @@ public class TodoResponse {
         todo.getId(),
         todo.getTitle(),
         todo.isDone(),
-        todo.getDueDate(),
+        TimeZoneConverter.toJtc(todo.getDueDate()),
         todo.getRepeatType() != null ? todo.getRepeatType() : RepeatType.NONE,
         todo.getRemindOffsetMinutes(),
         todo.getOwner() != null ? todo.getOwner().getId() : null,

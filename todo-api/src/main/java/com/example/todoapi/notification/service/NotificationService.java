@@ -2,13 +2,14 @@ package com.example.todoapi.notification.service;
 
 import com.example.todoapi.repository.TodoRepository;
 import com.example.todoapi.entity.Todo;
+import com.example.todoapi.util.TimeZoneConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 /** 通知の業務ロジック集約（通知対象取得・送信後の打刻・履歴取得など） */
 @Service
@@ -27,7 +28,7 @@ public class NotificationService {
     @Transactional
     public void markNotifiedByIds(List<Long> ids) {
         if (!ids.isEmpty()) {
-            todoRepository.markNotifiedByIds(ids, LocalDateTime.now());
+            todoRepository.markNotifiedByIds(ids, LocalDateTime.now(ZoneOffset.UTC));
         }
     }
 
@@ -63,17 +64,15 @@ public class NotificationService {
     }
 
     /* 3)で使用：Todo → InAppMessage 変換 */
-    private static final ZoneId APP_ZONE = ZoneId.of("Asia/Tokyo");
-
     private static InAppMessage toMessage(Todo t) {
         Long id = t.getId();
         String title = "まもなく期限：「" + nullSafe(t.getTitle()) + "」";
         String body = (t.getDueDate() != null) // 期限
-                ? "期限: " + t.getDueDate().toString().replace('T', ' ')
+                ? "期限: " + TimeZoneConverter.toJtc(t.getDueDate()).toString().replace('T', ' ')
                 : "期限未設定";
         String url = "/todos?open=" + id; // /todos一覧内のタスクを開くルーティング
         Instant createdAt = (t.getNotifiedAt() != null) // 通知打刻
-                ? t.getNotifiedAt().atZone(APP_ZONE).toInstant() // ローカル時刻→（地域適用）→UTC(Instant) の瞬間へ
+                ? t.getNotifiedAt().atZone(ZoneOffset.UTC).toInstant() // ローカル時刻→（地域適用）→UTC(Instant) の瞬間へ
                 : Instant.now();
         return new InAppMessage(id, title, body, url, createdAt);
     }

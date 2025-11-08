@@ -22,6 +22,7 @@ import com.example.todoapi.entity.RepeatType;
 import com.example.todoapi.entity.Tag;
 import com.example.todoapi.entity.Todo;
 import com.example.todoapi.entity.User;
+import com.example.todoapi.util.TimeZoneConverter;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class TodoService {
         todo.setOwner(createdUser);
         todo.setTitle(req.getTitle());
         todo.setDone(req.getDone());
-        todo.setDueDate(req.getDueDate());
+        todo.setDueDate(TimeZoneConverter.toUtc(req.getDueDate()));
         if (req.getDueDate() != null && req.getRemindOffsetMinutes() != null && req.getRemindOffsetMinutes() > 0) {
             todo.setRemindOffsetMinutes(req.getRemindOffsetMinutes());
         } else {
@@ -109,7 +110,7 @@ public class TodoService {
         existing.setTitle(req.getTitle());
         existing.setDone(req.getDone());
         LocalDateTime beforeDue = existing.getDueDate();
-        existing.setDueDate(req.getDueDate());
+        existing.setDueDate(TimeZoneConverter.toUtc(req.getDueDate()));
 
         Integer beforeOffset = existing.getRemindOffsetMinutes();
         Integer nextOffset = null;

@@ -10,12 +10,11 @@ spring:
     active: dev
   datasource:
     # Dockerのコンテナ内でのMySQL接続URL
-    url: jdbc:mysql://db:3306/todo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo&characterEncoding=utf8
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      connection-init-sql: "SET time_zone = '+09:00'"
+      connection-init-sql: "SET time_zone = '+00:00'"
   jpa:
     open-in-view: false
     hibernate:
@@ -25,7 +24,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         jdbc:
-          time_zone: ${SPRING_JACKSON_TIME_ZONE} 
+          time_zone: UTC
     show-sql: true
   jackson:
     time-zone: ${SPRING_JACKSON_TIME_ZONE} 

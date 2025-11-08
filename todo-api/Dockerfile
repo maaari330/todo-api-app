@@ -1,8 +1,6 @@
 # build stage
-FROM maven:3.8.5-openjdk-17 AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
-# まず settings を入れてネットワーク強化
-COPY ../maven-settings.xml /root/.m2/settings.xml
 COPY pom.xml .
 # ネットワークが不安定でも数回リトライ (-U で更新)
 RUN bash -lc '\
@@ -18,7 +16,7 @@ RUN mvn -Dmaven.test.skip=true clean package
 # RUN mvn clean package -DskipTests
 
 # runtime stage
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/target/todo-api-0.0.1-SNAPSHOT.jar ./app.jar
 EXPOSE 8080
