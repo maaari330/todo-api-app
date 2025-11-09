@@ -63,7 +63,7 @@ export async function unsubscribePush() {
 
 /** 既にService Worker 登録済みか確認 */
 async function getRegistration(): Promise<ServiceWorkerRegistration> {
-    const existing = await navigator.serviceWorker.getRegistration('/');
+    const existing = await navigator.serviceWorker.getRegistration();
     if (existing) return existing;
     return navigator.serviceWorker.register('/sw.js', { scope: '/' });
 }

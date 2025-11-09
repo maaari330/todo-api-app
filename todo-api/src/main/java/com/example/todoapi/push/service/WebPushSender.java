@@ -6,8 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
+import nl.martijndwars.webpush.Utils;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;  
+import java.util.Base64; 
 import java.util.List;
 
 @Slf4j
@@ -22,8 +26,11 @@ public class WebPushSender {
     /** 単一購読に送る低レベル API（成功: true） */
     public boolean send(String endpoint, String p256dh, String auth, PushPayload payload) {
         try {
-            String json = om.writeValueAsString(payload);
-            Notification n = new Notification(endpoint, p256dh, auth, json);
+            byte[] body = om.writeValueAsString(payload).getBytes(StandardCharsets.UTF_8);
+            PublicKey userPublicKey = Utils.loadPublicKey(p256dh);
+            byte[] authSecret      = Base64.getUrlDecoder().decode(auth);
+            int ttlSeconds = 60 * 60 * 24 * 28;
+            Notification n = new Notification( endpoint,userPublicKey,authSecret,body,ttlSeconds);
             pushService.send(n);
             return true;
         } catch (Exception e) {
@@ -49,7 +56,7 @@ public class WebPushSender {
                 title,
                 body,
                 (url != null ? url : "/"),
-                "/icons/icon-192.png",
+                "/icons/icon-192x192.png",
                 todoId,
                 userId);
 
@@ -58,8 +65,7 @@ public class WebPushSender {
             if (ok)
                 delivered++;
             else {
-                // 410 Gone 等の恒久失敗なら購読削除も検討（ライブラリの例外/レスポンスで分岐）
-                // subscriptionService.unsubscribe(s.getEndpoint());
+                subscriptionService.unsubscribe(userId,s.getEndpoint());
             }
         }
         return delivered;
