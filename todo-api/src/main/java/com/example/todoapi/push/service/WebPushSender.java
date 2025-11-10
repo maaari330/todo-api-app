@@ -8,7 +8,7 @@ import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Utils;
 import org.springframework.stereotype.Service;
-
+import org.apache.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;  
 import java.util.Base64; 
@@ -31,16 +31,13 @@ public class WebPushSender {
             byte[] authSecret      = Base64.getUrlDecoder().decode(auth);
             int ttlSeconds = 60 * 60 * 24 * 28;
             Notification n = new Notification( endpoint,userPublicKey,authSecret,body,ttlSeconds);
-            try (CloseableHttpResponse response = pushService.send(n)) {
-                int status = response.getStatusLine().getStatusCode();
-                if (status >= 200 && status < 300) {
-                    return true;
-                } else {
-                    // 失敗した場合はログに詳細を出力
-                    log.warn("[webpush] push failed endpoint={} status={} reason={}",
-                            endpoint, status, response.getStatusLine().getReasonPhrase());
-                    return false;
-                }
+            HttpResponse response = pushService.send(n);
+            int status = response.getStatusLine().getStatusCode();
+            if (status >= 200 && status < 300) {
+                return true;
+            } else {
+                log.warn("[webpush] push failed endpoint={} status={} reason={}",endpoint, status, response.getStatusLine().getReasonPhrase());
+                return false;
             }
         } catch (Exception e) {
             log.warn("[webpush] failed endpoint={} err={}", endpoint, e.toString());
