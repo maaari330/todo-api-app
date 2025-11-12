@@ -91,6 +91,10 @@ todo-api-app サイト解説
             VAPID_PUBLIC_KEY=YourPublicKey
             VAPID_PRIVATE_KEY=YourPrivateKey
             VAPID_SUBJECT=mailto:you@example.com
+      サーバはUTCで保持し、API/画面表示はJST（Asia/Tokyo）に統一
+            TZ=Asia/Tokyo
+            SPRING_JACKSON_TIME_ZONE=Asia/Tokyo
+            SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE=Asia/Tokyo
        (オプション) フロントエンドが直接 API にアクセスする場合の URL
       　　※Nginxが/api→app:8080へプロキシする構成となっているため、オプションにしています。
             REACT_APP_API_URL=http://localhost:8080
