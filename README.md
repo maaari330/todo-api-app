@@ -75,23 +75,23 @@ todo-api-app サイト解説
       
       2. .env の作成
       アプリを起動する前にリポジトリのルートに .env ファイルを作成し、次のような環境変数を設定します（必要に応じて変更してください）。
-            MYSQL_ROOT_PASSWORD=your_root_password
+            MYSQL_ROOT_PASSWORD=change-me
             MYSQL_DATABASE=todo
-            SPRING_DATASOURCE_USERNAME=root
-            SPRING_DATASOURCE_PASSWORD=your_root_password
+            SPRING_DATASOURCE_USERNAME=change-me
+            SPRING_DATASOURCE_PASSWORD=change-me
       JWT 秘密鍵と有効期限（ミリ秒）。例では 24 時間を指定
-            JWT_SECRETKEY=YourRandomJwtSecretKey
+            JWT_SECRETKEY=change-me
             JWT_EXPIRATION=86400000
       Actuator 用 Basic 認証（Swagger/健康チェック用）
-            ACTUATOR_USER=admin
-            ACTUATOR_PASSWORD=adminpass
+            ACTUATOR_USER=change-me
+            ACTUATOR_PASSWORD=change-me
       スケジューラのスレッドプールサイズと通知ジョブ間隔（ミリ秒）
             SCHEDULER_POOL_SIZE=5
             NOTIFY_SCAN_MS=60000
       Web Push (VAPID) キー。`web-push` パッケージ等で生成できます
-            VAPID_PUBLIC_KEY=YourPublicKey
-            VAPID_PRIVATE_KEY=YourPrivateKey
-            VAPID_SUBJECT=mailto:you@example.com
+            VAPID_PUBLIC_KEY=change-me
+            VAPID_PRIVATE_KEY=change-me
+            VAPID_SUBJECT=change-me
       サーバはUTCで保持し、API/画面表示はJST（Asia/Tokyo）に統一
             TZ=UTC
             SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE=UTC
