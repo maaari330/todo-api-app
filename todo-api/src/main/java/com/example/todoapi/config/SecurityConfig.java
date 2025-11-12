@@ -84,12 +84,12 @@ public class SecurityConfig {
                 // 4. エンドポイント毎の認可設定
                 .authorizeHttpRequests(authz -> authz
                         // ─── 認証不要 ─────────────────────────────
-                        .requestMatchers("/auth/login", "/auth/signup").permitAll()
+                        .requestMatchers("/auth/login", "/auth/signup","/push/public-key").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // ─── 認証必須 ─────────────────────────────
                         .requestMatchers("/auth/logout").authenticated()
-                        .requestMatchers("/auth/me", "/notifications/**", "/push/**").authenticated()
+                        .requestMatchers("/auth/me", "/notifications/**", "/push/subscribe").authenticated()
                         .requestMatchers("/actuator/**", "/todos/**", "/categories/**", "/tags/**")
                         .authenticated()
                         // ─── その他 ───────────────────────────────
