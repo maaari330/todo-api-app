@@ -65,6 +65,7 @@ todo-api-app サイト解説
     Docker 環境では Nginx が /api パスをバックエンドにリバースプロキシします。
 
 セットアップ方法
+
       0. 前提条件
       Docker Desktop　と Docker Compose が動作する環境
       
