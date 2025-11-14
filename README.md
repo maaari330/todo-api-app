@@ -112,28 +112,6 @@ todo-api-app サイト解説
             バックエンド API: http://localhost:8080
             Swagger UI: http://localhost:8080/swagger-ui.html
 
-個別にビルド／実行する場合
-
-Docker を使わずにローカルで動かすことも可能です。
-
-バックエンド
-
-Java 17 と Maven を用意します。
-
-todo-api ディレクトリで依存関係を解決し JAR を作成します。
-
-cd todo-api
-mvn clean package
-
-
-.env で指定したデータベースに接続できるよう環境変数を設定し、以下のように JAR を起動します。
-
-export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/todo
-export SPRING_DATASOURCE_USERNAME=root
-export SPRING_DATASOURCE_PASSWORD=your_root_password
-# その他 JWT_SECRETKEY 等も同様に環境変数として設定
-java -jar target/todo-api-*.jar
-
 フロントエンド
 
 Node.js 18+ と npm を用意します。
