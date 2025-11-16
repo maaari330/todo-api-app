@@ -50,7 +50,7 @@ export default function HeaderBell({ keepMounted = false }) {
                     <div className="p-3">
                         <h3 className="mb-2 text-sm font-medium text-gray-700">最近の通知</h3>
                         <div className="max-h-80 overflow-auto">
-                            {open || keepMounted ? <InAppList /> : null}
+                        <InAppList key="inapp-list" hidden={!open && !keepMounted} />
                         </div>
                     </div>
                 </div>

@@ -55,7 +55,7 @@ public class NotificationService {
          * 
          * 【record により自動生成されるもの】
          * - private final フィールド：各引数ごと
-         * - コンストラクタ： public InAppMessage(Long todoId, String title, String body, String
+         * - コンストラクタ： public InAppMessage(Long id, String title, String body, String
          * url, Instant createdAt)
          * - アクセサ（ゲッター相当・名前はフィールド名そのまま）：todoId(), title(), body(), url(), createdAt()
          * - equals()/hashCode()：全コンポーネントを基に生成

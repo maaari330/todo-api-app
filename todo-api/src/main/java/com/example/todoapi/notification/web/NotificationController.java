@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.time.Duration;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
+import java.time.ZoneOffset;
 
 /**
  * 通知ドメインサービス：通知対象の検出・状態更新・in-app 用ページング取得など通知ロジックの中核
@@ -32,13 +33,13 @@ public class NotificationController {
             @RequestParam(defaultValue = "0") int page, // 0始まりのページ番号
             @RequestParam(defaultValue = "20") int size, // ← 1ページの件数、デフォルト20件
             @RequestParam(required = false) String afterIso, // ← フロントが「最後に見た時刻」（ISO形式）を送れる口
-            @RequestParam(required = false, defaultValue = "60") int minutesFallback // after が無いときの保険、「遡る幅」
+            @RequestParam(required = false, defaultValue = "1440") int minutesFallback // after が無いときの保険、「遡る幅」
     ) {
+        System.out.println("InApp API called. user.id = " + user.getId());
         Instant after = (afterIso != null && !afterIso.isBlank())
                 ? Instant.parse(afterIso) // 例: "2025-08-27T11:22:33"
                 : Instant.now().minus(Duration.ofMinutes(minutesFallback));
-        ZoneId zone = ZoneId.of("Asia/Tokyo");
-        LocalDateTime since = LocalDateTime.ofInstant(after, zone);
+        LocalDateTime since = LocalDateTime.ofInstant(after, ZoneOffset.UTC);
         return notificationService.findRecentByUserPaged(user.getId(), since, page, size);
     }
 }

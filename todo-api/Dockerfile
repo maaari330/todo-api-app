@@ -12,7 +12,7 @@ RUN bash -lc '\
     '
 # ここでソース投入して本ビルド
 COPY src ./src
-RUN mvn -Dmaven.test.skip=true clean package
+RUN mvn clean package
 # RUN mvn clean package -DskipTests
 
 # runtime stage
