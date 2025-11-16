@@ -12,7 +12,6 @@ self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
 // 1) プッシュ通知
 globalThis.addEventListener('push', (event) => {
-    console.log('[SW] push event:', event); // ★追加
     let raw = '';
     try { raw = event.data ? event.data.text() : ''; } catch { }
     // ページへも通知（通常のConsoleで見える）
@@ -24,7 +23,8 @@ globalThis.addEventListener('push', (event) => {
         try { return event.data?.json() || {}; } catch { return {}; }
     })(); // サーバが WebPushSender.java で送ったペイロード（JSON）を受け取る
 
-    const title = data.title || '通知';
+    const baseTitle = data.title || '通知';
+    const title = data.appName ? `${data.appName} - ${baseTitle}` : baseTitle;
     const options = {
         body: data.body || '',
         icon: '/icons/icon-192x192.png',

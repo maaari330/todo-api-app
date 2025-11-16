@@ -66,7 +66,7 @@ public class NotificationService {
     /* 3)で使用：Todo → InAppMessage 変換 */
     private static InAppMessage toMessage(Todo t) {
         Long id = t.getId();
-        String title = "まもなく期限：「" + nullSafe(t.getTitle()) + "」";
+        String title = "My TODO Task Manager まもなく期限：「" + nullSafe(t.getTitle()) + "」";
         String body = (t.getDueDate() != null) // 期限
                 ? "期限: " + TimeZoneConverter.toJtc(t.getDueDate()).toString().replace('T', ' ')
                 : "期限未設定";

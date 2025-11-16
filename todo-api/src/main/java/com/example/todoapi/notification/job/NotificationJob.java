@@ -28,11 +28,10 @@ public class NotificationJob {
             int delivered = webPushSender.sendToUser(
                     t.getOwner().getId(),
                     t.getId(),
+                    "My TODO Task Manager",
                     "まもなく期限",
                     "「" + t.getTitle() + "」が近づいています",
                     "/app/todos/" + t.getId());
-            System.out.printf("[notify] todoId=%d ownerId=%d delivered=%d due=%s offset=%d%n",
-                    t.getId(), t.getOwner().getId(), delivered, t.getDueDate(), t.getRemindOffsetMinutes());
             if (delivered > 0) {
                 successIds.add(t.getId()); // 送れたものだけ確定
             }

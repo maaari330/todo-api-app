@@ -2,6 +2,8 @@ package com.example.todoapi.notification.web;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.example.todoapi.notification.service.NotificationService;
+import com.example.todoapi.notification.service.NotificationService.InAppMessage;
+import com.example.todoapi.notification.service.NotificationService.Paged;
 import com.example.todoapi.service.CustomUserDetailsService.LoginUser;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class NotificationController {
 
     /** ログインユーザーのアプリ内通知を、afterIso 以降（未指定時は直近 minutesFallback 分）からページング取得して返す */
     @GetMapping("/in-app/recent")
-    public List<NotificationService.InAppMessage> recent(
+    public Paged<InAppMessage> recent(
             @AuthenticationPrincipal LoginUser user,
             @RequestParam(defaultValue = "0") int page, // 0始まりのページ番号
             @RequestParam(defaultValue = "20") int size, // ← 1ページの件数、デフォルト20件
@@ -37,7 +39,6 @@ public class NotificationController {
                 : Instant.now().minus(Duration.ofMinutes(minutesFallback));
         ZoneId zone = ZoneId.of("Asia/Tokyo");
         LocalDateTime since = LocalDateTime.ofInstant(after, zone);
-        var paged = notificationService.findRecentByUserPaged(user.getId(), since, page, size);
-        return paged.content(); // InAppMessage のリストを返す
+        return notificationService.findRecentByUserPaged(user.getId(), since, page, size);
     }
 }

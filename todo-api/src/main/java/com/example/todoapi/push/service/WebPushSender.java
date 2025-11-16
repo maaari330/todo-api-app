@@ -49,7 +49,7 @@ public class WebPushSender {
      * 指定ユーザーの全購読に push を送信し、成功件数を返す。
      * NotificationJob から呼ぶ公開API（シグネチャはジョブ側に合わせてあります）
      */
-    public int sendToUser(Long userId, Long todoId, String title, String body, String url) {
+    public int sendToUser(Long userId, Long todoId, String appName, String title, String body, String url) {
         // ownerId が null の場合は匿名購読などへ送る実装に変えてもOK
         List<PushSubscription> subs = subscriptionService.listForUser(userId);
         if (subs.isEmpty()) {
@@ -59,6 +59,7 @@ public class WebPushSender {
 
         int delivered = 0;
         PushPayload payload = new PushPayload(
+                appName,
                 title,
                 body,
                 (url != null ? url : "/"),
@@ -79,6 +80,7 @@ public class WebPushSender {
 
     /** 表示/クリック遷移などで使うペイロード */
     public record PushPayload(
+            String appName,
             String title,
             String body,
             String url,
