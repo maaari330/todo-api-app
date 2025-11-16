@@ -6,5 +6,11 @@ export async function fetchRecent(afterIso?: string, page = 0, size = 20): Promi
     const params: any = { page, size };
     if (afterIso) params.afterIso = afterIso;
     const { data } = await api.get('/notifications/in-app/recent', { params });
-    return data;
+    return data.content.map((m: any) => ({
+        id: m.id,
+        title: m.title,
+        body: m.body,
+        url: m.url,
+        createdAt: m.createdAt,
+    }));
 }

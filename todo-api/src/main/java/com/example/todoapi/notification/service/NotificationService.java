@@ -48,7 +48,7 @@ public class NotificationService {
     }
 
     /* 3)で使用：アプリ内通知表示用の不変 DTO */
-    public record InAppMessage(Long todoId, String title, String body, String url, Instant createdAt) {
+    public record InAppMessage(Long id, String title, String body, String url, Instant createdAt) {
         /**
          * DBから取った Todo を Service で整形した DTO
          * - エンティティ（Todo）を直接返さず、必要な項目に限定して漏洩を防ぐ
