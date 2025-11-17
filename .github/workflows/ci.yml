@@ -56,7 +56,6 @@ jobs:
       - name: Install dependencies
         run: cd todo-frontend && npm ci
 
-      # フロントテストは完全に無効化
       - name: Run frontend Unit tests
         if: false
         run: cd todo-frontend && npm test -- --watchAll=false
