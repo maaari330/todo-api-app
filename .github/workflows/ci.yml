@@ -188,6 +188,7 @@ jobs:
 
       - name: Actuator Health Check
         run: |
-          # Basic 認証付きで /actuator/health を叩いて 200 を期待
-          curl -u "${{ secrets.ACTUATOR_USER }}:${{ secrets.ACTUATOR_PASSWORD }}" \
-               -f http://localhost:8080/actuator/health
+          AUTH_USER="${{ secrets.ACTUATOR_USER }}"
+          AUTH_PASS="${{ secrets.ACTUATOR_PASSWORD }}"
+          curl -u "${AUTH_USER}:${AUTH_PASS}" \ 
+               -f http://localhost:8080/actuator/health 
