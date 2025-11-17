@@ -117,8 +117,6 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USER }}/todo-api:latest
 
   integration-tests:
-    # ジョブ自体を完全スキップ
-    if: false
     needs: docker-build-push
     runs-on: ubuntu-latest
     steps:
