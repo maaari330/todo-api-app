@@ -175,12 +175,7 @@ jobs:
           docker ps -a || true
 
           echo "=== app container logs ==="
-          CONTAINER_ID=$(docker ps -aqf "name=app")
-          if [ -n "$CONTAINER_ID" ]; then
-            docker logs "$CONTAINER_ID" || true
-          else
-            echo "No container found with name=app"
-          fi
+          docker compose logs --tail=200 app || true
 
           exit 1
 
