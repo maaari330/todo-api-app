@@ -37,7 +37,7 @@ public class NotificationController {
     ) {
         System.out.println("InApp API called. user.id = " + user.getId());
         Instant after = (afterIso != null && !afterIso.isBlank())
-                ? Instant.parse(afterIso) // 例: "2025-08-27T11:22:33"
+                ? Instant.parse(afterIso)
                 : Instant.now().minus(Duration.ofMinutes(minutesFallback));
         LocalDateTime since = LocalDateTime.ofInstant(after, ZoneOffset.UTC);
         return notificationService.findRecentByUserPaged(user.getId(), since, page, size);
