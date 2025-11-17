@@ -162,15 +162,26 @@ jobs:
       - name: Wait for App Healthy
         run: |
           for i in {1..18}; do
+            echo "Try $i: curl /actuator/health"
             if curl -sf http://localhost:8080/actuator/health; then
               echo "App is up"
               exit 0
             fi
             sleep 5
           done
+
           echo "App did not start in time"
-          CONTAINER_ID=$(docker compose ps -aqf "name=app")
-          docker logs "$CONTAINER_ID" || true
+          echo "=== docker ps -a ==="
+          docker ps -a || true
+
+          echo "=== app container logs ==="
+          CONTAINER_ID=$(docker ps -aqf "name=app")
+          if [ -n "$CONTAINER_ID" ]; then
+            docker logs "$CONTAINER_ID" || true
+          else
+            echo "No container found with name=app"
+          fi
+
           exit 1
 
       - name: OpenAPI Endpoint Checks
