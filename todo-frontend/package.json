@@ -23,7 +23,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^18.19.127",
+    "@types/node": "^18.19.130",
     "@types/react": "18.2.66",
     "@types/react-dom": "18.2.15",
     "autoprefixer": "^10.4.20",
