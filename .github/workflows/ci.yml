@@ -190,5 +190,5 @@ jobs:
         run: |
           AUTH_USER="${{ secrets.ACTUATOR_USER }}"
           AUTH_PASS="${{ secrets.ACTUATOR_PASSWORD }}"
-          curl -u "${AUTH_USER}:${AUTH_PASS}" \ 
-               -f http://localhost:8080/actuator/health 
+          curl -u "${AUTH_USER}:${AUTH_PASS}" \
+               -f http://localhost:8080/actuator/health
