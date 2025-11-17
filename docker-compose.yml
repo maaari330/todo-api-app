@@ -2,22 +2,27 @@
 services:
   db:
     build:
-      context: ./mysql # DB 用 Dockerfile の格納先
-      dockerfile: Dockerfile # ./mysql/Dockerfile を使う
+      context: ./mysql  # DB 用 Dockerfile の格納先
+      dockerfile: Dockerfile  # ./mysql/Dockerfile を使う
     image: todo-mysql:8.0
     container_name: todo-db
     restart: always
-    command: [ "mysqld", "--default-time-zone=+00:00" ]
+    command:
+      - mysqld
+      - --default-time-zone=+00:00
     env_file:
       - .env
     environment:
       TZ: ${TZ}
     volumes:
-      - db-data:/var/lib/mysql # DB データはボリュームに保持
+      - db-data:/var/lib/mysql  # DB データはボリュームに保持
     ports:
       - "3306:3306"
     healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD}" ]
+      test:
+        - CMD-SHELL
+        - >
+          mysqladmin ping -h localhost -uroot -p${MYSQL_ROOT_PASSWORD}
       interval: 15s
       timeout: 10s
       retries: 8
@@ -37,12 +42,12 @@ services:
     restart: always
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=${TZ}&characterEncoding=utf8
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=${TZ}&characterEncoding=utf8"  # yamllint disable-line rule:line-length
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: ${TZ}
       SPRING_JACKSON_TIME_ZONE: ${SPRING_JACKSON_TIME_ZONE}
-      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: ${SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE}
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: ${SPRING_JPA_JDBC_TIME_ZONE}
     ports:
       - "8080:8080"
 
@@ -53,13 +58,13 @@ services:
     depends_on:
       - app
     ports:
-      - "3000:80" # localhost:3000 に来たHTTP通信を、Nginxコンテナの :80 に転送
+      - "3000:80"
     env_file:
       - .env
     environment:
       TZ: ${TZ}
       SPRING_JACKSON_TIME_ZONE: ${SPRING_JACKSON_TIME_ZONE}
-      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: ${SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE}
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE: ${SPRING_JPA_JDBC_TIME_ZONE}
     restart: unless-stopped
 
 # ボリュームを定義（コンテナを再起動／再ビルドしても DBデータは残る）

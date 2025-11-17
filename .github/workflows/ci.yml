@@ -26,7 +26,8 @@ jobs:
       - name: JSON Lint
         run: |
           files=$(find . -type f -name '*.json')
-          if [-z "$files"]; then
+          # ← [ と ] の前後にスペース必須
+          if [ -z "$files" ]; then
             echo "No JSON files to lint, skipping."
             exit 0
           fi
@@ -41,7 +42,7 @@ jobs:
           yamllint_file_or_dir: "."
           yamllint_strict: true
 
-  frontend-build-and-test:
+  frontend-build:
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -55,14 +56,15 @@ jobs:
       - name: Install dependencies
         run: cd todo-frontend && npm ci
 
+      # フロントテストは完全に無効化
       - name: Run frontend Unit tests
-        if: false 
+        if: false
         run: cd todo-frontend && npm test -- --watchAll=false
 
       - name: Build frontend
         run: cd todo-frontend && npm run build
 
-  build-and-test:
+  build:
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -74,7 +76,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: "17"
-          distribution: 'temurin'
+          distribution: "temurin"
 
       - name: Cache Maven packages
         uses: actions/cache@v3
@@ -86,13 +88,15 @@ jobs:
         run: mvn clean package -DskipTests
         working-directory: ./todo-api
 
+      # backend のユニットテストも完全に無効化
       - name: Run Unit Tests
-        if: false 
+        if: false
         run: mvn test
         working-directory: ./todo-api
 
   docker-build-push:
-    needs: build-and-test
+    # 旧名 build-and-test ではなく、今のジョブ名 build を参照
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -114,6 +118,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USER }}/todo-api:latest
 
   integration-tests:
+    # ジョブ自体を完全スキップ
     if: false
     needs: docker-build-push
     runs-on: ubuntu-latest
