@@ -93,7 +93,6 @@ jobs:
         working-directory: ./todo-api
 
   docker-build-push:
-    # 旧名 build-and-test ではなく、今のジョブ名 build を参照
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -150,7 +149,7 @@ jobs:
             fi
             sleep 5
           done
-      
+
       - name: Docker ps debug
         run: |
           docker ps -a
