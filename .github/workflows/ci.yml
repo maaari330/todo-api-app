@@ -152,7 +152,7 @@ jobs:
 
       - name: Docker ps debug
         run: |
-          docker ps -a
+          docker compose ps -a
           docker compose ps || true
 
       - name: Try curl to app (debug)
@@ -169,7 +169,7 @@ jobs:
             sleep 5
           done
           echo "App did not start in time"
-          CONTAINER_ID=$(docker ps -aqf "name=app")
+          CONTAINER_ID=$(docker compose ps -aqf "name=app")
           docker logs "$CONTAINER_ID" || true
           exit 1
 
