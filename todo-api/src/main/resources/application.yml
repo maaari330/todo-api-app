@@ -27,7 +27,7 @@ spring:
           time_zone: UTC
     show-sql: true
   jackson:
-    time-zone: ${SPRING_JACKSON_TIME_ZONE} 
+    time-zone: ${SPRING_JACKSON_TIME_ZONE}
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -68,9 +68,9 @@ notify:
 
 # VAPID（Web Push）の設定
 vapid:
-  publicKey: ${VAPID_PUBLIC_KEY} 
+  publicKey: ${VAPID_PUBLIC_KEY}
   privateKey: ${VAPID_PRIVATE_KEY}
-  subject: ${VAPID_SUBJECT} 
+  subject: ${VAPID_SUBJECT}
 
 logging:
   level:
