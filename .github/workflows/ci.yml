@@ -138,6 +138,8 @@ jobs:
           VAPID_SUBJECT=${{ secrets.VAPID_SUBJECT }}
           SCHEDULER_POOL_SIZE=${{ secrets.SCHEDULER_POOL_SIZE }}
           NOTIFY_SCAN_MS=${{ secrets.NOTIFY_SCAN_MS }}
+          CI_TEST_USERNAME=${{ secrets.CI_TEST_USERNAME }}
+          CI_TEST_PASSWORD=${{ secrets.CI_TEST_PASSWORD }}
           EOF
 
       - name: Start services via Docker Compose
@@ -180,11 +182,37 @@ jobs:
 
           exit 1
 
+      - name: Signup test user
+        run: |
+          curl -f -X POST http://localhost:8080/auth/signup \
+            -H "Content-Type: application/json" \
+            -d '{
+              \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
+              \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
+            }'
+
+      - name: Login test user and get JWT
+        run: |
+          LOGIN_JSON=$(curl -s -X POST http://localhost:8080/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{
+              \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
+              \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
+            }')
+          TOKEN=$(echo "$LOGIN_JSON" | jq -r '.token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "Failed to extract JWT token from login response"
+            exit 1
+          fi
+          echo "JWT_TOKEN=$TOKEN" >> $GITHUB_ENV
+
       - name: OpenAPI Endpoint Checks
         run: |
           curl -f http://localhost:8080/todos
           curl -f -X POST http://localhost:8080/todos \
                -H "Content-Type: application/json" \
+               -H "Authorization: Bearer $JWT_TOKEN" \
                -d '{"title":"CI Test","completed":false}'
 
       - name: Check JSON Spec
