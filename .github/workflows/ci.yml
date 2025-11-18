@@ -190,14 +190,15 @@ jobs:
               \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
               \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
             }'
-      
+
       - name: Show app logs after signup
         if: failure()
         run: docker compose logs --tail=200 app
 
       - name: Login test user and get JWT
         run: |
-          RESPONSE=$(curl -s -w '\n%{http_code}' -X POST http://localhost:8080/auth/login \
+          RESPONSE=$(curl -s -w '\n%{http_code}' \
+            -X POST http://localhost:8080/auth/login \
             -H "Content-Type: application/json" \
             -d "{
               \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
