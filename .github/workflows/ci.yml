@@ -128,6 +128,8 @@ jobs:
           MYSQL_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+          ACTUATOR_PASSWORD=${{ secrets.ACTUATOR_PASSWORD }}
+          ACTUATOR_USER=${{ secrets.ACTUATOR_USER }}
           EOF
 
       - name: Start services via Docker Compose
