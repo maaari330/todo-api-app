@@ -190,16 +190,37 @@ jobs:
               \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
               \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
             }'
+      
+      - name: Show app logs after signup
+        if: failure()
+        run: docker compose logs --tail=200 app
 
       - name: Login test user and get JWT
         run: |
-          LOGIN_JSON=$(curl -s -X POST http://localhost:8080/auth/login \
+          RESPONSE=$(curl -s -w '\n%{http_code}' -X POST http://localhost:8080/auth/login \
             -H "Content-Type: application/json" \
-            -d '{
+            -d "{
               \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
               \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
-            }')
+            }")
+
+          echo "Raw response with status:"
+          echo "$RESPONSE"
+
+          # 最後の行が HTTP ステータス、それ以外がボディという前提で分割
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n 1)
+          LOGIN_JSON=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP_STATUS = $HTTP_STATUS"
+          echo "LOGIN_JSON = $LOGIN_JSON"
+
+          # ここは実際のフィールド名に合わせる（例: .accessToken）
           TOKEN=$(echo "$LOGIN_JSON" | jq -r '.token')
+
+          if [ "$HTTP_STATUS" -ge 400 ]; then
+            echo "Login HTTP error: $HTTP_STATUS"
+            exit 1
+          fi
 
           if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
             echo "Failed to extract JWT token from login response"
