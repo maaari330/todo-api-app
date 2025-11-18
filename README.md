@@ -112,8 +112,3 @@ todo-api-app サイト解説
             バックエンド API: http://localhost:8080
             Swagger UI: http://localhost:8080/swagger-ui.html
 
-
-
-注意点
-      本リポジトリは学習用のサンプルです。JWT 秘密鍵や DB パスワードなどは外部に公開しないでください。
-      以上がこのリポジトリの概要とセットアップ手順です。Docker を使えば簡単に環境構築ができるので、ぜひ試してみてください。問題があれば Issues 等で報告してください。
