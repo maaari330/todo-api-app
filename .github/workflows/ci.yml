@@ -133,6 +133,9 @@ jobs:
           TZ=${{ secrets.TZ }}
           SPRING_JACKSON_TIME_ZONE=${{ secrets.SPRING_JACKSON_TIME_ZONE }}
           SPRING_JPA_TIME_ZONE=${{ secrets.SPRING_JPA_TIME_ZONE }}
+          VAPID_PUBLIC_KEY=${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY=${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT=${{ secrets.VAPID_SUBJECT }}
           EOF
 
       - name: Start services via Docker Compose
@@ -154,15 +157,6 @@ jobs:
             fi
             sleep 5
           done
-
-      - name: Docker ps debug
-        run: |
-          docker compose ps -a
-          docker compose ps || true
-
-      - name: Try curl to app (debug)
-        run: |
-          curl -v http://localhost:8080/actuator/health || true
 
       - name: Wait for App Healthy
         run: |
