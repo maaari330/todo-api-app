@@ -186,13 +186,13 @@ jobs:
         run: |
           curl -v -X POST http://localhost:8080/auth/signup \
             -H "Content-Type: application/json" \
-            -d '{
+            -d "{
               \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
               \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
-            }'
+            }"
 
       - name: Show app logs after signup
-        if: failure()
+        if: ${{ always() }}
         run: docker compose logs --tail=200 app
 
       - name: Login test user and get JWT
