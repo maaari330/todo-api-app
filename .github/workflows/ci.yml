@@ -130,6 +130,9 @@ jobs:
           ACTUATOR_USER=${{ secrets.ACTUATOR_USER }}
           JWT_SECRETKEY=${{ secrets.JWT_SECRETKEY }}
           JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
+          TZ=${{ secrets.TZ }}
+          SPRING_JACKSON_TIME_ZONE=${{ secrets.SPRING_JACKSON_TIME_ZONE }}
+          SPRING_JPA_TIME_ZONE=${{ secrets.SPRING_JPA_TIME_ZONE }}
           EOF
 
       - name: Start services via Docker Compose
