@@ -191,10 +191,6 @@ jobs:
               \"password\": \"${{ secrets.CI_TEST_PASSWORD }}\"
             }"
 
-      - name: Show app logs after signup
-        if: ${{ always() }}
-        run: docker compose logs --tail=200 app
-
       - name: Login test user and get JWT
         run: |
           RESPONSE=$(curl -s -w '\n%{http_code}' \
@@ -215,8 +211,7 @@ jobs:
           echo "HTTP_STATUS = $HTTP_STATUS"
           echo "LOGIN_JSON = $LOGIN_JSON"
 
-          # ここは実際のフィールド名に合わせる（例: .accessToken）
-          TOKEN=$(echo "$LOGIN_JSON" | jq -r '.token')
+          TOKEN=$(echo "$LOGIN_JSON" | jq -r '.accessToken')
 
           if [ "$HTTP_STATUS" -ge 400 ]; then
             echo "Login HTTP error: $HTTP_STATUS"
@@ -228,6 +223,10 @@ jobs:
             exit 1
           fi
           echo "JWT_TOKEN=$TOKEN" >> $GITHUB_ENV
+      
+      - name: Show app logs after signup
+        if: ${{ always() }}
+        run: docker compose logs --tail=200 app
 
       - name: OpenAPI Endpoint Checks
         run: |
