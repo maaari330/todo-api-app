@@ -112,36 +112,8 @@ todo-api-app サイト解説
             バックエンド API: http://localhost:8080
             Swagger UI: http://localhost:8080/swagger-ui.html
 
-フロントエンド
 
-Node.js 18+ と npm を用意します。
-
-todo-frontend ディレクトリで依存パッケージをインストールします。
-
-cd todo-frontend
-npm ci
-
-
-開発サーバを起動してブラウザで確認します。
-
-npm start
-
-
-REACT_APP_API_URL 環境変数を .env またはコマンドラインで指定すると、API のベース URL を変更できます。
-
-開発・テスト
-
-バックエンドは JUnit でテストされています。mvn test で実行できます。
-
-フロントエンドは npm test で Jest/React Testing Library のテストを実行できます。CI では JSON/YAML の lint やユニットテストを行い、Docker イメージをビルドして GitHub Container Registry へプッシュするワークフローが設定されています
-github.com
-。
 
 注意点
-
-本リポジトリは学習用のサンプルです。JWT 秘密鍵や DB パスワードなどは外部に公開しないでください。
-
-.env ファイルには多くの変数がありますが、不要な変数は削除しても動作に影響しません。通知機能を使用する場合は Web Push (VAPID) キーを必ず設定してください。
-
-
-以上がこのリポジトリの概要とセットアップ手順です。Docker を使えば簡単に環境構築ができるので、ぜひ試してみてください。問題があれば Issues 等で報告してください。
+      本リポジトリは学習用のサンプルです。JWT 秘密鍵や DB パスワードなどは外部に公開しないでください。
+      以上がこのリポジトリの概要とセットアップ手順です。Docker を使えば簡単に環境構築ができるので、ぜひ試してみてください。問題があれば Issues 等で報告してください。
