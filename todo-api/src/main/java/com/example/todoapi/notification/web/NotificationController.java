@@ -32,7 +32,7 @@ public class NotificationController {
             @AuthenticationPrincipal LoginUser user,
             @RequestParam(defaultValue = "0") int page, 
             @RequestParam(defaultValue = "20") int size, // ← 1ページの件数、デフォルト20件
-            @RequestParam(required = false) String afterIso, // ← フロントが「最後に見た時刻」（ISO形式）を送れる口
+            @RequestParam(required = false) String afterIso, // ← フロントが「最後に見た時刻」
             @RequestParam(required = false, defaultValue = "1440") int minutesFallback // after が無いときの保険、「遡る幅」
     ) {
         System.out.println("InApp API called. user.id = " + user.getId());
