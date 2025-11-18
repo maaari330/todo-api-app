@@ -130,10 +130,12 @@ jobs:
           SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           ACTUATOR_PASSWORD=${{ secrets.ACTUATOR_PASSWORD }}
           ACTUATOR_USER=${{ secrets.ACTUATOR_USER }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
           EOF
 
       - name: Start services via Docker Compose
-        run: docker compose -f docker-compose.yml --env-file .env up -d
+        run: docker compose up -d
 
       - name: Check if JAR exists in app container
         run: |
