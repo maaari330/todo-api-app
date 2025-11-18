@@ -136,6 +136,8 @@ jobs:
           VAPID_PUBLIC_KEY=${{ secrets.VAPID_PUBLIC_KEY }}
           VAPID_PRIVATE_KEY=${{ secrets.VAPID_PRIVATE_KEY }}
           VAPID_SUBJECT=${{ secrets.VAPID_SUBJECT }}
+          SCHEDULER_POOL_SIZE=${{ secrets.SCHEDULER_POOL_SIZE }}
+          NOTIFY_SCAN_MS=${{ secrets.NOTIFY_SCAN_MS }}
           EOF
 
       - name: Start services via Docker Compose
