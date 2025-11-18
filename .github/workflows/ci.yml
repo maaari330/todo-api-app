@@ -224,10 +224,6 @@ jobs:
           fi
           echo "JWT_TOKEN=$TOKEN" >> $GITHUB_ENV
 
-      - name: Show app logs after signup
-        if: ${{ always() }}
-        run: docker compose logs --tail=200 app
-
       - name: OpenAPI Endpoint Checks
         run: |
           curl -f http://localhost:8080/todos
@@ -235,6 +231,10 @@ jobs:
                -H "Content-Type: application/json" \
                -H "Authorization: Bearer $JWT_TOKEN" \
                -d '{"title":"CI Test","completed":false}'
+
+      - name: Show app logs after signup
+        if: ${{ always() }}
+        run: docker compose logs --tail=200 app
 
       - name: Check JSON Spec
         run: |
