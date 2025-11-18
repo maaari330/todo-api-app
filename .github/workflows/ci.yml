@@ -128,7 +128,7 @@ jobs:
           SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
           ACTUATOR_PASSWORD=${{ secrets.ACTUATOR_PASSWORD }}
           ACTUATOR_USER=${{ secrets.ACTUATOR_USER }}
-          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_SECRETKEY=${{ secrets.JWT_SECRETKEY }}
           JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
           EOF
 
