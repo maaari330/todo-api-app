@@ -184,7 +184,7 @@ jobs:
 
       - name: Signup test user
         run: |
-          curl -f -X POST http://localhost:8080/auth/signup \
+          curl -v -X POST http://localhost:8080/auth/signup \
             -H "Content-Type: application/json" \
             -d '{
               \"username\": \"${{ secrets.CI_TEST_USERNAME }}\",
