@@ -223,7 +223,7 @@ jobs:
             exit 1
           fi
           echo "JWT_TOKEN=$TOKEN" >> $GITHUB_ENV
-      
+
       - name: Show app logs after signup
         if: ${{ always() }}
         run: docker compose logs --tail=200 app
