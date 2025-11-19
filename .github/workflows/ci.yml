@@ -226,7 +226,8 @@ jobs:
 
       - name: OpenAPI Endpoint Checks
         run: |
-          curl -f http://localhost:8080/todos
+          curl -f http://localhost:8080/todos \
+              -H "Authorization: Bearer $JWT_TOKEN"
           curl -f -X POST http://localhost:8080/todos \
                -H "Content-Type: application/json" \
                -H "Authorization: Bearer $JWT_TOKEN" \
