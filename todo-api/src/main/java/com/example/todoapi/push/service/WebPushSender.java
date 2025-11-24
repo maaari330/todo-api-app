@@ -57,6 +57,8 @@ public class WebPushSender {
             return 0;
         }
 
+        log.info("[webpush] userId={} has {} subscriptions", userId, subs.size());
+
         int delivered = 0;
         PushPayload payload = new PushPayload(
                 appName,
@@ -68,13 +70,18 @@ public class WebPushSender {
                 userId);
 
         for (PushSubscription s : subs) {
+            log.info("[webpush] try send to endpoint={}", s.getEndpoint());
             boolean ok = send(s.getEndpoint(), s.getP256dh(), s.getAuth(), payload);
+            log.info("[webpush] result endpoint={} ok={}", s.getEndpoint(), ok);
             if (ok)
                 delivered++;
             else {
                 subscriptionService.unsubscribe(userId,s.getEndpoint());
+                log.info("[webpush] unsubscribed endpoint={} for userId={}", s.getEndpoint(), userId);
             }
         }
+        log.info("[webpush] sendToUser finished: userId={} todoId={} delivered={}",
+             userId, todoId, delivered);
         return delivered;
     }
 

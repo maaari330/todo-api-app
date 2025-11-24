@@ -17,6 +17,7 @@ function urlBase64ToUint8Array(base64String: string) {
 
 /** 購読を作成してサーバへ登録（endpoint/p256dh/authをそのまま送る） */
 export async function ensureSubscription() {
+    console.log('[ensureSubscription] called', navigator.userAgent);
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
         throw new Error("Push not supported");
     }
@@ -45,6 +46,12 @@ export async function ensureSubscription() {
         auth: subJson.keys.auth,
         userAgent: navigator.userAgent,
     });
+
+    // これをファイルの末尾あたりに追加（開発中だけでOK）
+    if (typeof window !== 'undefined') {
+        // @ts-ignore
+        window.ensureSubscription = ensureSubscription;
+    }    
     return sub;
 }
 

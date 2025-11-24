@@ -6,7 +6,6 @@
  * WebPushSender.java（バックエンド）からjsonを受領したら実行される
  * */
 
-console.log("[SW] loaded");
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
